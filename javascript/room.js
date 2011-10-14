@@ -55,9 +55,8 @@ Room.prototype.draw = function(display) {
             drawing.rect(display, '#0000ff', new gamejs.Rect([left, up], [width, height]), 1);
             break;
           case 1:
-            break;
           case 2:
-            var w = new wall.Wall(2, [left, up]);
+            var w = new wall.Wall(get_type(i, j), [left, up]);
             w.draw(mainSurface);
             break;
         }
