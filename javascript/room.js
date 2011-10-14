@@ -4,8 +4,8 @@ var drawing = require('gamejs/draw');
 var ROOM_HEIGHT = 7;
 var ROOM_WIDTH = 9;
 
-var WALL_SMALL = 20;
-var WALL_BIG = 180;
+var WALL_SMALL = 25;
+var WALL_BIG = 175;
 
 function Room(id) {
   this._id = id;
@@ -23,7 +23,8 @@ Room.prototype.id = function() {
 }
 
 Room.prototype.get = function(x,y) {
-  return this._state[y][x];
+  return Math.floor(Math.random() * 3);
+//  return this._state[y][x];
 }
 
 function get_edge(p) {
@@ -41,15 +42,11 @@ Room.prototype.draw = function(display) {
       var width = get_width(i);
       var up = get_edge(j);
       var height = get_width(j);
-      //if (this.get(i, j) == true) {
-        drawing.rect(display, '#aaaaaa', new gamejs.Rect([left, up], [width, height]), 2);
-        window.console.log('' + left + ', ' + up + ',' + width + ',' + height);
-      //}
+      if (this.get(i, j) == 1) {
+        drawing.rect(display, '#0000ff', new gamejs.Rect([left, up], [width, height]), 1);
+      }
     }
   }
-  display.blit(
-      (new gamejs.font.Font('30px Sans-serif')).render(ROOM_HEIGHT)
-  );
 }
 
 exports.Room = Room
