@@ -3,10 +3,16 @@ var gamejs = require('gamejs');
 // $gamejs.preload([]);
 
 function draw(display, room) {
-    display.blit(
-        (new gamejs.font.Font('30px Sans-serif')).render(room.id())
-    );
+  for (var i=0; i<ROOM_WIDTH; i++) {
+    for (var j=0; j<ROOM_HEIGHT; j++) {
+      window.console.log('test' + i);
+    }
+  }
 }
+
+/**    display.blit(
+        (new gamejs.font.Font('30px Sans-serif')).render(ROOM_HEIGHT)
+    );*/
 
 gamejs.ready(function() {
 

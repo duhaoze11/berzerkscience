@@ -1,5 +1,5 @@
-var ROOM_HEIGHT = 9;
-var ROOM_WIDTH = 7;
+var ROOM_HEIGHT = 7;
+var ROOM_WIDTH = 9;
 
 function Room(id) {
   var _id = id;
