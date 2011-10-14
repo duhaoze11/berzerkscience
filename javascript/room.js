@@ -17,3 +17,4 @@ function Room(id) {
     return _state[y][x];
   }
 }
+

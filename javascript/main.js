@@ -2,13 +2,17 @@ var gamejs = require('gamejs');
 
 // $gamejs.preload([]);
 
+function draw(display, room) {
+    display.blit(
+        (new gamejs.font.Font('30px Sans-serif')).render(room.id())
+    );
+}
+
 gamejs.ready(function() {
 
     var display = gamejs.display.setMode([800, 600]);
-    var room = new Room();
-    display.blit(
-        (new gamejs.font.Font('30px Sans-serif')).render(room.width + ' and ' +  room.height)
-    );
+    var room = new Room(4);
+    draw(display, room);
 
     /**
     function tick() {
@@ -18,3 +22,4 @@ gamejs.ready(function() {
     gamejs.time.fpsCallback(tick, this, 26);
     **/
 });
+
