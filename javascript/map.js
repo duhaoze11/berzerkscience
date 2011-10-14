@@ -72,6 +72,10 @@ Map.prototype.is_connected = function(x,y) {
   return false;
 }
 
+Map.prototype._rand_int = function(n) {
+  return Math.floor(Math.random()*n);
+}
+
 Map.prototype.generate_map = function() {
   var cnt = 0;
   var edges = new Array();
@@ -90,6 +94,42 @@ Map.prototype.generate_map = function() {
   }
 
   this._room_connections = edge.Edge.prototype.build_mst(edges);
+
+  hole_position = new Array();
+  for (var i = 0; i < MAP_HEIGHT+1; i++) {
+    hole_position[i] = new Array();
+    for (var j = 0; j < MAP_WIDTH+1; j++) {
+      hole_position[i][j] = -1;
+    }
+  }
+  for (var i = 0; i < MAP_HEIGHT; i++) {
+    for (var j = 0; j < MAP_WIDTH; j++) {
+      var ry = i + this._dy[MAP_RIGHT];
+      var rx = j + this._dx[MAP_RIGHT];
+      var cur_id = this._room_map[i][j].id();
+      var right_id = rx < MAP_WIDTH ? this._room_map[ry][rx].id() : -1;
+      var dy = i + this._dy[MAP_DOWN];
+      var dx = j + this._dx[MAP_DOWN];
+      var down_id = dy < MAP_HEIGHT ? this._room_map[dy][dx].id() : -1;
+
+      if (right_id >= 0 && this.is_connected(cur_id, right_id)) {
+        hole_position[ry*2+1][rx*2] = this._rand_int(room.ROOM_HEIGHT/2);
+      }
+      if (down_id >= 0 && this.is_connected(cur_id, down_id)) {
+        var q = room.ROOM_WIDTH;
+        var z = room.ROOM_WIDTH/2;
+        var r = this._rand_int(z);
+        hole_position[dy*2][dx*2+1] = r;
+      }
+    }
+  }
+  for (var i = 0; i < MAP_HEIGHT; i++) {
+    for (var j = 0; j < MAP_WIDTH; j++) {
+      var ay = i*2+1;
+      var ax = j*2+1;
+      this._room_map[i][j].generate_walls(hole_position[ay-1][ax],hole_position[ay][ax+1],hole_position[ay+1][ax],hole_position[ay][ax-1]);
+    }
+  }
 }
 
 exports.Map = Map;
