@@ -1,24 +1,17 @@
 var gamejs = require('gamejs');
+var room = require('room');
 
 // $gamejs.preload([]);
 
-function draw(display, room) {
-  for (var i=0; i<ROOM_WIDTH; i++) {
-    for (var j=0; j<ROOM_HEIGHT; j++) {
-      window.console.log('test' + i);
-    }
-  }
-}
-
-/**    display.blit(
-        (new gamejs.font.Font('30px Sans-serif')).render(ROOM_HEIGHT)
-    );*/
+var WALL_SMALL = 20;
+var WALL_BIG = 180;
 
 gamejs.ready(function() {
 
     var display = gamejs.display.setMode([800, 600]);
-    var room = new Room(5);
-    draw(display, room);
+
+    var r = new room.Room(5);
+    r.draw(display);
 
     /**
     function tick() {

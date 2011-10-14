@@ -1,3 +1,5 @@
+var gamejs = require('gamejs');
+
 var ROOM_HEIGHT = 7;
 var ROOM_WIDTH = 9;
 
@@ -19,4 +21,17 @@ Room.prototype.id = function() {
 Room.prototype.get = function(x,y) {
   return this._state[y][x];
 }
+
+Room.prototype.draw = function(display) {
+  for (var i=0; i<ROOM_WIDTH; i++) {
+    for (var j=0; j<ROOM_HEIGHT; j++) {
+      window.console.log('test' + i + ', ' + j);
+    }
+  }
+  display.blit(
+      (new gamejs.font.Font('30px Sans-serif')).render(ROOM_HEIGHT)
+  );
+}
+
+exports.Room = Room
 
