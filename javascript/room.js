@@ -1,5 +1,6 @@
 var gamejs = require('gamejs');
 var drawing = require('gamejs/draw');
+var wall = require('wall');
 
 var ROOM_HEIGHT = 7;
 var ROOM_WIDTH = 9;
@@ -35,7 +36,12 @@ function get_width(p) {
   return ((p % 2) == 0) ? WALL_SMALL : WALL_BIG;
 }
 
+function get_type(i, j) {
+  return Math.floor(i % 2) + Math.floor(j % 2) * 2;
+}
+
 Room.prototype.draw = function(display) {
+  var mainSurface = gamejs.display.getSurface();
   for (var i=0; i<ROOM_WIDTH; i++) {
     for (var j=0; j<ROOM_HEIGHT; j++) {
       var left = get_edge(i);
@@ -43,7 +49,18 @@ Room.prototype.draw = function(display) {
       var up = get_edge(j);
       var height = get_width(j);
       if (this.get(i, j) == 1) {
-        drawing.rect(display, '#0000ff', new gamejs.Rect([left, up], [width, height]), 1);
+        switch (get_type(i, j)) {
+          case 0:
+          case 3:
+            drawing.rect(display, '#0000ff', new gamejs.Rect([left, up], [width, height]), 1);
+            break;
+          case 1:
+            break;
+          case 2:
+            var w = new wall.Wall(2, [left, up]);
+            w.draw(mainSurface);
+            break;
+        }
       }
     }
   }
