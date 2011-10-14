@@ -37,7 +37,7 @@ function get_width(p) {
 
 Room.prototype.draw = function(display) {
   for (var i=0; i<ROOM_WIDTH; i++) {
-    for (var j=0; j<=ROOM_HEIGHT; j++) {
+    for (var j=0; j<ROOM_HEIGHT; j++) {
       var left = get_edge(i);
       var width = get_width(i);
       var up = get_edge(j);
