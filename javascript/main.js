@@ -8,7 +8,7 @@ var WALL_BIG = 180;
 
 gamejs.ready(function() {
 
-    var display = gamejs.display.setMode([800, 600]);
+    var display = gamejs.display.setMode([820, 620]);
 
     var r = new room.Room(5);
     r.draw(display);
