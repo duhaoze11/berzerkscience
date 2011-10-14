@@ -8,7 +8,8 @@ var WALL_SMALL = 20;
 var WALL_BIG = 180;
 
 gamejs.preload(['graphics/walls/brick1.png',
-		'graphics/walls/brick2.png']);
+		'graphics/walls/brick2.png',
+		'graphics/walls/brick3.png']);
 gamejs.ready(function() {
 
     var display = gamejs.display.setMode([825, 625]);
