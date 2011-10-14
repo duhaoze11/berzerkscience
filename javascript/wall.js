@@ -11,6 +11,7 @@ function Wall(type, rect) {
   this._type = type;
   switch (this._type) {
     case 0:
+      // not supported
       this.image = gamejs.image.load("graphics/walls/brick1.png");
       break;
     case 1:
@@ -20,6 +21,7 @@ function Wall(type, rect) {
       this.image = gamejs.image.load("graphics/walls/brick1.png");
       break;
     case 3:
+      // not supported
       this.image = gamejs.image.load("graphics/walls/brick1.png");
       break;
   }
