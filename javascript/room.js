@@ -23,15 +23,10 @@ Room.prototype.get = function(x,y) {
 }
 
 Room.prototype.draw = function(display) {
-  for (var i=0; i<ROOM_WIDTH; i++) {
-    for (var j=0; j<ROOM_HEIGHT; j++) {
-      window.console.log('test' + i + ', ' + j);
-    }
-  }
   display.blit(
       (new gamejs.font.Font('30px Sans-serif')).render(ROOM_HEIGHT)
   );
 }
 
-exports.Room = Room
+exports.Room = Room;
 
