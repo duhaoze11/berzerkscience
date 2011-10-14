@@ -1,5 +1,6 @@
 var gamejs = require('gamejs');
 var room = require('room');
+var map = require('map');
 
 // $gamejs.preload([]);
 
@@ -12,6 +13,8 @@ gamejs.ready(function() {
 
     var r = new room.Room(5);
     r.draw(display);
+    var m = new map.Map();
+    m.generate_map();
 
     /**
     function tick() {

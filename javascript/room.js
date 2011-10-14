@@ -49,5 +49,5 @@ Room.prototype.draw = function(display) {
   }
 }
 
-exports.Room = Room
+exports.Room = Room;
 
