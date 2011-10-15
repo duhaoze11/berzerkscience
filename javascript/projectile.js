@@ -8,22 +8,57 @@ var enemy = require('enemy');
 var PROJECTILE_WIDTH = 20;
 var PROJECTILE_HEIGHT = 20;
 
-var MAX_PROJECTILE_SPEED = 300; // pixels per second
-var EXPLOSION_RADIUS = 150;
+function ProjStats(speed, radius) {
+  this.speed = speed;
+  this.radius = radius;
+}
+
+var proj_properties = [[], // no weapon
+                       [  new ProjStats(0, 0), // fireball
+                          new ProjStats(200, 40),
+                          new ProjStats(300, 60),
+                          new ProjStats(350, 100)],
+                       [   // lightning
+                          new ProjStats(0, 0),
+                          new ProjStats(300, 0),
+                          new ProjStats(350, 50),
+                          new ProjStats(0, 200)]
+                      ];
+
+var WEAPON_NONE = 0;
+var WEAPON_FIREBALL = 1;
+var WEAPON_LIGHTNING = 2;
+
+var MAX_WEAPON_LEVEL = 3;
 
 gamejs.preload(['graphics/projectiles/fireball.png']);
 
 // rect - rectangle with (left, top) specifying where to put projectile's center
 // speed - direction vector, not necessarily normalized
-function Projectile(rect, speed) {
+function Projectile(rect, speed, type, level) {
   Projectile.superConstructor.apply(this, arguments);
-  this.image = gamejs.image.load("graphics/projectiles/fireball.png");
+  assert.assert(type != WEAPON_NONE, "invalid weapon type");
+  assert.assert(level != 0, "invalid weapon level");
+  
+  switch (type) {
+    case WEAPON_FIREBALL:
+      this.image = gamejs.image.load("graphics/projectiles/fireball.png");
+      break;
+    case WEAPON_LIGHNING:
+      this.image = gamejs.image.load("graphics/projectiles/fireball.png");
+      break;
+    default:
+      assert.assert(false, "weapon type unsupported");
+  }
+  assert.assert(level < proj_properties[type].length, "unknown weapon level");
+  var props = proj_properties[type][level];
+
   this.rect = new gamejs.Rect([rect.left - PROJECTILE_WIDTH / 2, rect.top - PROJECTILE_HEIGHT / 2],
                               [PROJECTILE_WIDTH, PROJECTILE_HEIGHT]);
-
   var len = Math.sqrt(speed[0] * speed[0] + speed[1] * speed[1]);
   assert.assert(len > 0.0001, "direction is not well defined");
-  this.speed = [speed[0] * MAX_PROJECTILE_SPEED / len, speed[1] * MAX_PROJECTILE_SPEED / len];
+  this.speed = [speed[0] * props.speed / len, speed[1] * props.speed / len];
+  this.radius = props.radius;
 }
 
 gamejs.utils.objects.extend(Projectile, sprite.Sprite);
@@ -59,7 +94,7 @@ Projectile.prototype.explode = function(room) {
     var dx = center[0] - robot_center[0];
     var dy = center[1] - robot_center[1];
     var len = Math.sqrt(dx * dx + dy * dy);
-    if (len > EXPLOSION_RADIUS || room.wall_collides_line(center, robot_center)) {
+    if (len > this.radius || room.wall_collides_line(center, robot_center)) {
       new_robots.push(robot);
     } else {
       window.console.log('hit');
@@ -72,4 +107,6 @@ exports.Projectile = Projectile;
 exports.PROJECTILE_WIDTH = PROJECTILE_WIDTH;
 exports.PROJECTILE_HEIGHT = PROJECTILE_HEIGHT;
 
-
+exports.WEAPON_NONE = WEAPON_NONE;
+exports.WEAPON_FIREBALL = WEAPON_FIREBALL;
+exports.WEAPON_LIGHTNING = WEAPON_LIGHTNING;
