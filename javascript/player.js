@@ -1,5 +1,7 @@
 var gamejs = require('gamejs');
 var drawing = require('gamejs/draw');
+var unit = require('unit');
+var vectors = require('gamejs/utils/vectors');
 
 var START_X = 312;
 var START_Y = 312;
@@ -19,7 +21,7 @@ function Player() {
   this.speed = [0, 0];
 }
 
-gamejs.utils.objects.extend(Player, gamejs.sprite.Sprite);
+gamejs.utils.objects.extend(Player, unit.Unit);
 
 Player.prototype.speed_up = function(e) {
   switch (e.key) {
@@ -62,8 +64,11 @@ Player.prototype.processUserInput = function(event) {
 Player.prototype.update = function(ms) {
   var dx = this.speed[0] * ms / 1000;
   var dy = this.speed[1] * ms / 1000;
-  this.rect.left += dx;
-  this.rect.top += dy;
+  var new_pos = vectors.add([dx,dy], [this.rect.left, this.rect.top]);
+  if (this._can_be_placed(new_pos)) {
+    this.rect.top = new_pos[1];
+    this.rect.left = new_pos[0];
+  }
 }
 
 exports.Player = Player;

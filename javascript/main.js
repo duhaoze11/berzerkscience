@@ -2,6 +2,7 @@ var gamejs = require('gamejs');
 var room = require('room');
 var map = require('map');
 var player = require('player');
+var game_state = require('game_state');
 
 // $gamejs.preload([]);
 
@@ -17,8 +18,10 @@ gamejs.ready(function() {
 
     var m = new map.Map();
     m.generate_map();
-    var r = m.get(0);
+    var room_id = 0;
+    var r = m.get(room_id);
     var p = new player.Player();
+    game_state.game_state.Init(m, room_id, p);
 
     function tick(ms) {
         gamejs.event.get().forEach(function(event) {
