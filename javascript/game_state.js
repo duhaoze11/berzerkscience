@@ -30,7 +30,6 @@ GameState.prototype.changeRoomIfNeeded = function() {
   }
 
   var room_id = this.map.get_neighbour(this.current_room.id(), exit);
-  window.console.log(room_id);
   assert.assert(room_id != -1, "exit detected incorrectly");
   this.current_room = this.map.get(room_id);
   switch (exit) {
