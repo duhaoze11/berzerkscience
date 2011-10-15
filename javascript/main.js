@@ -17,17 +17,20 @@ gamejs.ready(function() {
 
     var m = new map.Map();
     m.generate_map();
+
     var r = m.get(6);
-    r.draw(display);
-
     var p = new player.Player();
-    p.draw(display);
 
-    /**
     function tick() {
-        // game loop
+        gamejs.event.get().forEach(function(event) {
+          if (event.type === gamejs.event.KEY_DOWN ||
+              event.type === gamejs.event.KEY_UP) {
+            p.processUserInput(event);
+          }
+        });
+        r.draw(display);
+        p.draw(display);
         return;
     };
-    gamejs.time.fpsCallback(tick, this, 26);
-    **/
+    gamejs.time.fpsCallback(tick, this, 40);
 });
