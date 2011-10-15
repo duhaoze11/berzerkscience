@@ -20,25 +20,27 @@ gamejs.ready(function() {
     var room_id = 0;
     game_state.game_state.Init(m, m.get(room_id), p);
 
+    var done = 0;
+
     function tick(ms) {
-        gamejs.event.get().forEach(function(event) {
-          if (event.type === gamejs.event.KEY_DOWN ||
-              event.type === gamejs.event.KEY_UP ||
-              event.type === gamejs.event.MOUSE_DOWN) {
-            p.processUserInput(event);
-          }
+      gamejs.event.get().forEach(function(event) {
+        if (event.type === gamejs.event.KEY_DOWN ||
+          event.type === gamejs.event.KEY_UP ||
+          event.type === gamejs.event.MOUSE_DOWN) {
+        p.processUserInput(event);
+        }
         });
-        display.clear();
+      display.clear();
 
-        p.update(ms);
-        game_state.game_state.changeRoomIfNeeded();
+      p.update(ms);
+      game_state.game_state.changeRoomIfNeeded();
 
-        game_state.game_state.current_room.update(ms);
-        game_state.game_state.current_room.draw(display);
-        p.draw(display);
+      game_state.game_state.current_room.update(ms);
+      game_state.game_state.current_room.draw(display);
+      p.draw(display);
 
-        game_state.game_state.update_player_projectiles(ms, display);
-        return;
+      game_state.game_state.update_player_projectiles(ms, display);
+      return;
     };
     gamejs.time.fpsCallback(tick, this, 40);
 });

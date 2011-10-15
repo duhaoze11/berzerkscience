@@ -6,6 +6,7 @@ var vectors = require('gamejs/utils/vectors');
 var main = require('main');
 var unit = require('unit');
 var astar = require('gamejs/pathfinding/astar');
+var room = require('room');
 
 var ENEMY_WIDTH = exports.ENEMY_WIDTH = 40;
 var ENEMY_HEIGHT = exports.ENEMY_HEIGHT = 40;
@@ -50,7 +51,41 @@ function RoomMap(r) {
 }
 
 Enemy.prototype._select_astar_path = function() {
-  return [this.rect.left + Math.random() * 40 - 20, this.rect.top + Math.random() * 40 - 20];
+  var r = game_state.game_state.current_room;
+  var who;
+  var z = [this.rect.left,this.rect.top];
+  //alert('robot = '+z);
+  for (var i = 0; i < room.ROOM_HEIGHT; i++) {
+    for (var j = 0; j < room.ROOM_WIDTH; j++) {
+      if (r.get(i,j) == 1) continue;
+      var x0 = room.get_edge(j);
+      var y0 = room.get_edge(i);
+      var dx = room.get_edge(j+1);
+      var dy = room.get_edge(i+1);
+      if (x0 <= z[0] && x0+dx >= z[0] && y0 <= z[1] && y0+dy >= z[1]) {
+        who = [i,j];
+      }
+    }
+  }
+  if (who == undefined) return [this.rect.left,this.rect.top];
+  var dx = [0,1,0,-1];
+  var dy = [1,0,-1,0];
+  var to;
+  for (var d = 0; d < 4; d++) {
+    var aa = who[0]+dy[d];
+    var bb = who[1]+dx[d];
+    if (aa <= 0 || bb <= 0 || aa >= room.ROOM_HEIGHT-1 || bb >= room.ROOM_WIDTH-1) continue;
+    if (r.get(aa,bb) == 1) continue;
+    if (r._cell_map[aa][bb] < r._cell_map[who[0]][who[1]]) {
+      to = [aa,bb];
+    }
+  }
+  if (to == undefined) return [this.rect.left,this.rect.top];
+  var x0 = room.get_edge(to[1]);
+  var y0 = room.get_edge(to[0]);
+  var dx = room.get_edge(to[1]+1)-x0;
+  var dy = room.get_edge(to[0]+1)-y0;
+  return [x0+dx*0.5,y0+dy*0.5];
 }
 
 Enemy.prototype._select_new_waypoint = function() {
@@ -78,6 +113,7 @@ Enemy.prototype._select_new_waypoint = function() {
 Enemy.prototype.update = function(ms) {
   var pos = [this.rect.left, this.rect.top];
   this._going_to = this._select_new_waypoint();
+  window.console.log(this._going_to);
   var dir = vectors.subtract(this._going_to, pos);
   var len = vectors.len(dir);
   if (len > 1e-4) {

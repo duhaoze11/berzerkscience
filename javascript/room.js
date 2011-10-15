@@ -48,6 +48,7 @@ Room.prototype.get = function(i,j) {
 function get_edge(p) {
   return ((p >> 1) * (WALL_BIG + WALL_SMALL)) + ((p % 2) * WALL_SMALL);
 }
+exports.get_edge = get_edge;
 
 function get_width(p) {
   return ((p % 2) == 0) ? WALL_SMALL : WALL_BIG;
@@ -241,7 +242,56 @@ Room.prototype.generate_robots = function() {
   }
 }
 
+Room.prototype._update_room_map = function() {
+  var queue = new Array();
+  var fr = 0;
+  var ba = 0;
+  var r = [game_state.game_state.player.rect.left, game_state.game_state.player.rect.top];
+  var dist = new Array();
+  for (var i = 0; i < ROOM_HEIGHT; i++) {
+    dist[i] = new Array();
+    for (var j = 0; j < ROOM_WIDTH; j++) {
+      dist[i][j] = 100000;
+      if (this.get(i,j) == 1) continue;
+      var x0 = get_edge(j);
+      var y0 = get_edge(i);
+      var dx = get_edge(j+1);
+      var dy = get_edge(i+1);
+      if (x0 <= r[0] && x0+dx >= r[0] && y0 <= r[1] && y0+dy >= r[1]) {
+        dist[i][j] = 0;
+        queue[fr] = [i,j];
+        fr++;
+      }
+    }
+  }
+  var dx = [0,1,0,-1];
+  var dy = [1,0,-1,0];
+  for (;ba < fr; ba++) {
+    var a = queue[ba][0];
+    var b = queue[ba][1];
+    for (var d = 0; d < 4; d++) {
+      var aa = a+dy[d];
+      var bb = b+dx[d];
+      if (aa < 0 || bb < 0 || aa >= ROOM_HEIGHT || bb >= ROOM_WIDTH) continue;
+      if (this.get(aa,bb) == 1) continue;
+      if (dist[aa][bb] <= dist[a][b] + 1) continue;
+      dist[aa][bb] = dist[a][b] + 1;
+      queue[fr] = [aa,bb];
+      fr++;
+    }
+  }
+  this._cell_map = dist;
+  for (var i = 0; i < ROOM_HEIGHT; i++) {
+    s = '';
+    for (var j = 0; j < ROOM_WIDTH; j++) {
+      s += dist[i][j] + ' ';
+    }
+    window.console.log(s);
+  }
+}
+
 Room.prototype.update = function(ms) {
+  this._update_room_map();
   for (var i = 0; i < this._robots.length; i++) {
     var r = this._robots[i];
     if (r.state == enemy.Enemy.StateEnum.DEAD) continue;
