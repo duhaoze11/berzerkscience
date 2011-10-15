@@ -54,4 +54,9 @@ GameState.prototype.current_room_id = function() {
 }
 
 var global_game_state = new GameState();
+
+GameState.prototype.add_player_projectile = function(proj) {
+//  window.console.log(proj);
+}
+
 exports.game_state = global_game_state;
