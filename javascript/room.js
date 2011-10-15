@@ -212,13 +212,14 @@ Room.prototype.generate_walls = function(pos_up, pos_right, pos_down, pos_left) 
 }
 
 Room.prototype._get_initial_number_of_robots = function() {
+  return 1;
   return this._distance_from_start * 5 + 10;
 }
 
 Room.prototype._generate_robot_position = function() {
   var r = game_state.current_room;
   for (var tries = 0;tries < 50; tries++) {
-    var rect = new gamejs.Rect(Math.random() * main.SCREEN_WIDTH, Math.random() * main.SCREEN_HEIGHT, enemy.ENEMY_WIDTH, enemy.ENEMY_HEIGHT);
+    var rect = new gamejs.Rect(Math.random() * (main.SCREEN_WIDTH - enemy.ENEMY_WIDTH), Math.random() * (main.SCREEN_HEIGHT - enemy.ENEMY_HEIGHT), enemy.ENEMY_WIDTH, enemy.ENEMY_HEIGHT);
     var u = new unit.Unit();
     u.rect = rect;
     if (u._can_be_placed(rect.left, rect.top)) {
@@ -231,8 +232,9 @@ Room.prototype._generate_robot_position = function() {
 Room.prototype.generate_robots = function() {
   this._robots = new Array();
   for (var i = 0; i < this._get_initial_number_of_robots(); i++) {
-    this._robots[i] = new enemy.Enemy(i%3, this._generate_robot_position());
+    this._robots[i] = new enemy.Enemy(utils.rand_int(enemy.number_of_kinds), this._generate_robot_position());
     if (this._robots[i].rect == undefined) {
+      alert('born dead');
       this._robots[i].become_dead();
     }
   }

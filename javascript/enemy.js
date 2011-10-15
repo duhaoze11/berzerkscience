@@ -12,7 +12,8 @@ var ENEMY_HEIGHT = exports.ENEMY_HEIGHT = 40;
 var orange_robot_image = 'graphics/robots/orange.png';
 var red_robot_image = 'graphics/robots/red.png';
 var yellow_robot_image = 'graphics/robots/yellow.png';
-var robot_images = [ orange_robot_image, red_robot_image, yellow_robot_image ];
+var tractor1_robot_image = 'graphics/robots/tractor1.png';
+var robot_images = [ orange_robot_image, red_robot_image, yellow_robot_image, tractor1_robot_image ];
 
 gamejs.preload(robot_images);
 
@@ -40,6 +41,8 @@ Enemy.prototype._select_new_waypoint = function() {
 
 Enemy.prototype.update = function() {
   var pos = [this.rect.left, this.rect.top];
+  alert(pos);
+  alert(this._going_to);
   var dir = vectors.truncate(vectors.subtract(pos, this._going_to), this._speed);
   this._make_sliding_move(dir[0], dir[1]);
   if (vectors.distance(dir) < 5) {
@@ -52,3 +55,4 @@ Enemy.prototype.become_dead = function() {
 }
 
 exports.Enemy = Enemy;
+exports.number_of_kinds = robot_images.length;
