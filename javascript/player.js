@@ -23,6 +23,10 @@ function Player() {
                               [PLAYER_WIDTH, PLAYER_HEIGHT]);
   this.speed = [0, 0];
   this.num_projectiles = 0;
+  //this.weapon_type = projectile.WEAPON_NONE;
+  //this.weapon_level = 0;
+  this.weapon_type = projectile.WEAPON_FIREBALL;
+  this.weapon_level = 2;
 }
 
 gamejs.utils.objects.extend(Player, unit.Unit);
@@ -62,13 +66,15 @@ Player.prototype.center = function() {
 }
 
 Player.prototype.create_projectile = function(e) {
-  if (this.num_projectiles >= MAX_PROJECTILES || this.rect.collidePoint(e.pos)) {
+  if (this.num_projectiles >= MAX_PROJECTILES
+      || this.rect.collidePoint(e.pos)
+      || this.weapon_type == projectile.WEAPON_NONE) {
     return;
   }
   var player_center = this.center();
   var direction = [e.pos[0] + projectile.PROJECTILE_WIDTH / 2 - player_center[0],
                    e.pos[1] + projectile.PROJECTILE_HEIGHT / 2 - player_center[1]];
-  var proj = new projectile.Projectile(new gamejs.Rect(player_center), direction);
+  var proj = new projectile.Projectile(new gamejs.Rect(player_center), direction, this.weapon_type, this.weapon_level);
   this.num_projectiles++;
   game_state.game_state.add_player_projectile(proj);
 }
@@ -96,3 +102,4 @@ Player.prototype.update = function(ms) {
 exports.Player = Player;
 exports.PLAYER_WIDTH = PLAYER_WIDTH;
 exports.PLAYER_HEIGHT = PLAYER_HEIGHT;
+
