@@ -64,11 +64,7 @@ Player.prototype.processUserInput = function(event) {
 Player.prototype.update = function(ms) {
   var dx = this.speed[0] * ms / 1000;
   var dy = this.speed[1] * ms / 1000;
-  var new_pos = vectors.add([dx,dy], [this.rect.left, this.rect.top]);
-  if (this._can_be_placed(new_pos)) {
-    this.rect.top = new_pos[1];
-    this.rect.left = new_pos[0];
-  }
+  this._make_sliding_move(dx,dy);
 }
 
 exports.Player = Player;
