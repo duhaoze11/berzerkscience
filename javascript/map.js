@@ -1,6 +1,7 @@
 var gamejs = require('gamejs');
 var room = require('room');
 var edge = require('edge');
+var assert = require('assert');
 
 // Map direction constants.
 var MAP_UP = 0;
@@ -39,12 +40,12 @@ function Map() {
 }
 
 Map.prototype.get = function(id) {
-  assert(id >= 0, "room id must be >= 0");
+  assert.assert(id >= 0, "room id must be >= 0");
   return this._rooms_by_id[id];
 }
 
 Map.prototype.get_neighbour = function(id, dir) {
-  assert(id >= 0, "room id must be >= 0");
+  assert.assert(id >= 0, "room id must be >= 0");
   for (var i = 0; i < MAP_HEIGHT; i++) {
     for (var j = 0; j < MAP_WIDTH; j++) {
       if (_room_map[i][j].id() == id) {
@@ -77,6 +78,7 @@ Map.prototype._rand_int = function(n) {
 }
 
 Map.prototype.generate_map = function() {
+  window.console.log('generate_map');
   var cnt = 0;
   var edges = new Array();
   var BIG_NUMBER = 1e6;
@@ -96,9 +98,9 @@ Map.prototype.generate_map = function() {
   this._room_connections = edge.Edge.prototype.build_mst(edges);
 
   hole_position = new Array();
-  for (var i = 0; i < MAP_HEIGHT+1; i++) {
+  for (var i = 0; i < MAP_HEIGHT*2+1; i++) {
     hole_position[i] = new Array();
-    for (var j = 0; j < MAP_WIDTH+1; j++) {
+    for (var j = 0; j < MAP_WIDTH*2+1; j++) {
       hole_position[i][j] = -1;
     }
   }
@@ -113,13 +115,10 @@ Map.prototype.generate_map = function() {
       var down_id = dy < MAP_HEIGHT ? this._room_map[dy][dx].id() : -1;
 
       if (right_id >= 0 && this.is_connected(cur_id, right_id)) {
-        hole_position[ry*2+1][rx*2] = this._rand_int(room.ROOM_HEIGHT/2);
+        hole_position[ry*2+1][rx*2] = this._rand_int(Math.floor(room.ROOM_HEIGHT/2));
       }
       if (down_id >= 0 && this.is_connected(cur_id, down_id)) {
-        var q = room.ROOM_WIDTH;
-        var z = room.ROOM_WIDTH/2;
-        var r = this._rand_int(z);
-        hole_position[dy*2][dx*2+1] = r;
+        hole_position[dy*2][dx*2+1] = this._rand_int(Math.floor(room.ROOM_WIDTH/2));
       }
     }
   }

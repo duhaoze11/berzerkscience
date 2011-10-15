@@ -24,12 +24,11 @@ Room.prototype.id = function() {
 }
 
 Room.prototype.get = function(x,y) {
-  return Math.floor(Math.random() * 3);
-//  return this._state[y][x];
+  return this._state[y][x];
 }
 
 function get_edge(p) {
-  return left = (Math.floor(p / 2) * (WALL_BIG + WALL_SMALL)) + ((p % 2) * WALL_SMALL);
+  return (Math.floor(p / 2) * (WALL_BIG + WALL_SMALL)) + ((p % 2) * WALL_SMALL);
 }
 
 function get_width(p) {
@@ -71,6 +70,12 @@ Room.prototype.generate_walls = function(pos_up, pos_right, pos_down, pos_left) 
       this._state[i][j] = 0;
     }
   }
+  window.console.log('id = '+this.id());
+  window.console.log(pos_up);
+  window.console.log(pos_right);
+  window.console.log(pos_down);
+  window.console.log(pos_left);
+
   for (var i = 0; i < ROOM_HEIGHT; i++) {
     this._state[i][0] = this._state[i][ROOM_WIDTH-1] = 1;
   }
@@ -92,4 +97,6 @@ Room.prototype.generate_walls = function(pos_up, pos_right, pos_down, pos_left) 
 }
 
 exports.Room = Room;
+exports.ROOM_HEIGHT = ROOM_HEIGHT;
+exports.ROOM_WIDTH = ROOM_WIDTH;
 

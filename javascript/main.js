@@ -13,10 +13,10 @@ gamejs.ready(function() {
 
     var display = gamejs.display.setMode([825, 625]);
 
-    var r = new room.Room(5);
-    r.draw(display);
     var m = new map.Map();
     m.generate_map();
+    var r = m.get(6);
+    r.draw(display);
 
     /**
     function tick() {
