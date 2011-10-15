@@ -11,7 +11,7 @@ gamejs.utils.objects.extend(Unit, sprite.Sprite);
 
 Unit.prototype._can_be_placed = function(pos_x, pos_y) {
   var m = game_state.game_state.map;
-  var room_id = game_state.game_state.current_room_id;
+  var room_id = game_state.game_state.current_room_id();
   var r = m.get(room_id);
 
   var rr = new gamejs.Rect(pos_x, pos_y, this.rect.width, this.rect.height);

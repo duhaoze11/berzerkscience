@@ -9,19 +9,16 @@ var game_state = require('game_state');
 var SCREEN_WIDTH = 825;
 var SCREEN_HEIGHT= 625;
 
-var WALL_SMALL = 20;
-var WALL_BIG = 180;
-
 gamejs.ready(function() {
 
     var display = gamejs.display.setMode([SCREEN_WIDTH, SCREEN_HEIGHT]);
 
     var m = new map.Map();
     m.generate_map();
-    var room_id = 0;
-    var r = m.get(room_id);
+
     var p = new player.Player();
-    game_state.game_state.Init(m, room_id, p);
+    var room_id = 0;
+    game_state.game_state.Init(m, m.get(room_id), p);
 
     function tick(ms) {
         gamejs.event.get().forEach(function(event) {
@@ -31,9 +28,11 @@ gamejs.ready(function() {
           }
         });
         display.clear();
-        r.draw(display);
 
         p.update(ms);
+        game_state.game_state.changeRoomIfNeeded();
+
+        game_state.game_state.current_room.draw(display);
         p.draw(display);
         return;
     };
