@@ -18,7 +18,9 @@ var WALL_BIG = 175;
 
 var floorImages =(['graphics/floor/abstract1.png',
                    'graphics/floor/abstract2.png',
-                   'graphics/floor/wood1.png']);
+                   'graphics/floor/wood1.png',
+                   'graphics/floor/abstract3.png',
+                   'graphics/floor/tile1.png']);
 gamejs.preload(floorImages);
 
 function Room(id) {
@@ -30,7 +32,7 @@ function Room(id) {
       this._state[i][j] = 0;
     }
   }
-  var index = utils.rand_int(3);
+  var index = utils.rand_int(floorImages.length);
   // TODO(zvold): preload the images to global state and reuse image objects here
   this.floorTile = gamejs.image.load(floorImages[index]);
 }
