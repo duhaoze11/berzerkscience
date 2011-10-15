@@ -21,14 +21,17 @@ gamejs.ready(function() {
     var r = m.get(6);
     var p = new player.Player();
 
-    function tick() {
+    function tick(ms) {
         gamejs.event.get().forEach(function(event) {
           if (event.type === gamejs.event.KEY_DOWN ||
               event.type === gamejs.event.KEY_UP) {
             p.processUserInput(event);
           }
         });
+        display.clear();
         r.draw(display);
+
+        p.update(ms);
         p.draw(display);
         return;
     };

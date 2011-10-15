@@ -7,7 +7,7 @@ var START_Y = 312;
 var PLAYER_WIDTH = 40;
 var PLAYER_HEIGHT = 40;
 
-var MAX_SPEED = 4; // pixels per second
+var MAX_SPEED = 100; // pixels per second
 
 gamejs.preload(['graphics/wizard/left.png']);
 
@@ -24,24 +24,16 @@ gamejs.utils.objects.extend(Player, gamejs.sprite.Sprite);
 Player.prototype.speed_up = function(e) {
   switch (e.key) {
     case gamejs.event.K_w:
-      if (this.speed[1] > -MAX_SPEED) {
-        this.speed[1]--;
-      }
+      this.speed[1] = -MAX_SPEED;
       break;
     case gamejs.event.K_s:
-      if (this.speed[1] < MAX_SPEED) {
-        this.speed[1]++;
-      }
+      this.speed[1] = MAX_SPEED;
       break;
     case gamejs.event.K_a:
-      if (this.speed[0] > -MAX_SPEED) {
-        this.speed[0]--;
-      }
+      this.speed[0] = -MAX_SPEED;
       break;
     case gamejs.event.K_d:
-      if (this.speed[0] < MAX_SPEED) {
-        this.speed[0]++;
-      }
+      this.speed[0] = MAX_SPEED;
       break;
   }
 }
@@ -65,6 +57,13 @@ Player.prototype.processUserInput = function(event) {
   } else if (event.type === gamejs.event.KEY_UP) {
     this.slow_down(event);
   }
+}
+
+Player.prototype.update = function(ms) {
+  var dx = this.speed[0] * ms / 1000;
+  var dy = this.speed[1] * ms / 1000;
+  this.rect.left += dx;
+  this.rect.top += dy;
 }
 
 exports.Player = Player;
