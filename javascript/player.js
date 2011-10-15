@@ -69,6 +69,7 @@ Player.prototype.create_projectile = function(e) {
   var direction = [e.pos[0] + projectile.PROJECTILE_WIDTH / 2 - player_center[0],
                    e.pos[1] + projectile.PROJECTILE_HEIGHT / 2 - player_center[1]];
   var proj = new projectile.Projectile(new gamejs.Rect(player_center), direction);
+  this.num_projectiles++;
   game_state.game_state.add_player_projectile(proj);
 }
 

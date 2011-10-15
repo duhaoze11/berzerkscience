@@ -2,6 +2,7 @@ var gamejs = require('gamejs');
 var drawing = require('gamejs/draw');
 var assert = require('assert');
 var sprite = require('gamejs/sprite');
+var main = require('main');
 
 var PROJECTILE_WIDTH = 20;
 var PROJECTILE_HEIGHT = 20;
@@ -30,6 +31,11 @@ Projectile.prototype.update = function(ms) {
   var dy = this.speed[1] * ms / 1000;
   this.rect.left += dx;
   this.rect.top += dy;
+}
+
+Projectile.prototype.outside = function() {
+  return (this.rect.left < 0 || this.rect.left > main.SCREEN_WIDTH
+      || this.rect.top < 0 || this.rect.top > main.SCREEN_HEIGHT);
 }
 
 exports.Projectile = Projectile;
