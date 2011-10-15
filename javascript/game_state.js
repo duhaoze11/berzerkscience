@@ -40,7 +40,6 @@ GameState.prototype.changeRoomIfNeeded = function() {
   var room_id = this.map.get_neighbour(this.current_room.id(), exit);
   assert.assert(room_id != -1, "exit detected incorrectly");
   this.current_room = this.map.get(room_id);
-  this.current_room.generate_robots();
   switch (exit) {
     case map.MAP_LEFT:
       this.player.rect.left = main.SCREEN_WIDTH - player.PLAYER_WIDTH;
@@ -56,6 +55,7 @@ GameState.prototype.changeRoomIfNeeded = function() {
       break;
   }
 
+  this.current_room.generate_robots();
   this._save_where_player_entered = new gamejs.Rect(this.player.rect);
 
   // delete all player's projectiles as we changed room
