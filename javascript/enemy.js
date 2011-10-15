@@ -1,4 +1,5 @@
 var gamejs = require('gamejs');
+var projectile = require('projectile');
 var assert = require('assert');
 var drawing = require('gamejs/draw');
 var game_state = require('game_state');
@@ -27,9 +28,10 @@ function Enemy(type, rect) {
   this.image = gamejs.image.load(robot_images[this._type]);
   this.rect = rect;
   this._going_to = [this.rect.left, this.rect.top];
-  this._speed = 0.05;
+  this._speed = 0.02+0.01*type;
   this.state = Enemy.StateEnum.ALIVE;
   this.time_from_last_shot = 1e6;
+  this.fire_rate = 500;
 }
 
 gamejs.utils.objects.extend(Enemy, unit.Unit);
@@ -123,7 +125,7 @@ Enemy.prototype.update = function(ms) {
   var p = game_state.game_state.player.rect;
     var shoot_to = [ p.left + p.width*0.5, p.top + p.height*0.5 ];
     if (!game_state.game_state.current_room.wall_collides_line(shoot_from, shoot_to)) {
-      var proj = new projectile.Projectile(new gamejs.Rect(shoot_from[0], shoot_from[1]), vector.subtract(shoot_to, shoot_from), projectile.WEAPON_ENEMY_BULLET, 1);
+      var proj = new projectile.Projectile(new gamejs.Rect(shoot_from[0], shoot_from[1]), vectors.subtract(shoot_to, shoot_from), projectile.WEAPON_ENEMY_BULLET, 1);
       this.time_from_last_shot = 0;
       game_state.game_state.add_enemy_projectile(proj);
     }

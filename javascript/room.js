@@ -286,6 +286,7 @@ Room.prototype._update_room_map = function() {
     }
   }
   this._cell_map = dist;
+  /**
   for (var i = 0; i < ROOM_HEIGHT; i++) {
     s = '';
     for (var j = 0; j < ROOM_WIDTH; j++) {
@@ -294,6 +295,7 @@ Room.prototype._update_room_map = function() {
     window.console.log(s);
   }
     window.console.log('---------------------------');
+    */
 }
 
 Room.prototype.update = function(ms) {

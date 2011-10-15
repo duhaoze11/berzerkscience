@@ -40,6 +40,7 @@ gamejs.ready(function() {
       p.draw(display);
 
       game_state.game_state.update_player_projectiles(ms, display);
+      game_state.game_state.update_enemy_projectiles(ms, display);
 
       game_state.game_state.render_game_stats(display);
       return;

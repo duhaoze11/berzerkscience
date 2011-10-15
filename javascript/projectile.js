@@ -3,6 +3,7 @@ var drawing = require('gamejs/draw');
 var assert = require('assert');
 var sprite = require('gamejs/sprite');
 var main = require('main');
+var player = require('player');
 var enemy = require('enemy');
 var game_state = require('game_state');
 
@@ -40,6 +41,8 @@ var WEAPON_ENEMY_BULLET = 3;
 var MAX_WEAPON_LEVEL = 3;
 
 gamejs.preload(['graphics/projectiles/fireball.png']);
+gamejs.preload(['graphics/projectiles/lightning.png']);
+gamejs.preload(['graphics/projectiles/bullet.png']);
 
 // rect - rectangle with (left, top) specifying where to put projectile's center
 // speed - direction vector, not necessarily normalized
@@ -52,8 +55,11 @@ function Projectile(rect, speed, type, level) {
     case WEAPON_FIREBALL:
       this.image = gamejs.image.load("graphics/projectiles/fireball.png");
       break;
-    case WEAPON_LIGHNING:
+    case WEAPON_LIGHTNING:
       this.image = gamejs.image.load("graphics/projectiles/fireball.png");
+      break;
+    case WEAPON_ENEMY_BULLET:
+      this.image = gamejs.image.load("graphics/projectiles/bullet.png");
       break;
     default:
       assert.assert(false, "weapon type unsupported");
@@ -93,8 +99,7 @@ Projectile.prototype.collides = function(sprites) {
 }
 
 Projectile.prototype.explode = function(room, kills_robots, kills_player) {
-    /**
-  if (this.radius == 0) {
+  if (this.radius < 0) {
     this._kill_single();
   } else {
     var new_robots = new Array();
@@ -129,7 +134,6 @@ Projectile.prototype.explode = function(room, kills_robots, kills_player) {
       }
     }
   }
-    */
 }
 
 exports.Projectile = Projectile;

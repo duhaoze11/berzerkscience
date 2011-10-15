@@ -12,8 +12,10 @@ GameState.prototype.Init = function(map, current_room, player) {
   this.map = map;
   this.current_room = current_room;
   this.player = player;
+  this._save_where_player_entered = this.player.rect;
 
   this.player_projectiles = new Array();
+  this.enemy_projectiles = new Array();
   this.current_room.calculate_distances_from_start(-1);
   this.current_room.generate_robots();
 }
@@ -109,7 +111,7 @@ GameState.prototype.update_enemy_projectiles = function(ms, display) {
     proj.update(ms);
     if (proj.outside()) {
     } else if (proj.collides(this.current_room._walls_to_draw)
-               || proj.collides([player])) {
+               || proj.collides([this.player])) {
       proj.explode(this.current_room, false, true);
     } else {
       new_projectiles.push(proj);
