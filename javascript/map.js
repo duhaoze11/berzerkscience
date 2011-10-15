@@ -3,6 +3,8 @@ var room = require('room');
 var edge = require('edge');
 var assert = require('assert');
 var utils = require('utils');
+var main = require('main');
+var item = require('item');
 
 // Map direction constants.
 var MAP_UP = 0;
@@ -38,6 +40,21 @@ function Map() {
   this._dx[MAP_RIGHT] = 1;
   this._dx[MAP_DOWN] = 0;
   this._dx[MAP_LEFT] = -1;
+}
+
+Map.prototype.generate_items = function(type, num) {
+  // generate 3 firebooks at random rooms
+  for (var i = 0; i < num; i++) {
+    var id = utils.rand_int(MAP_HEIGHT * MAP_WIDTH);
+    var room = this._rooms_by_id[id];
+
+    // TODO(zvold): make sure books are reachable
+    var x = utils.rand_int(main.SCREEN_WIDTH - item.ITEM_WIDTH);
+    var y = utils.rand_int(main.SCREEN_HEIGHT - item.ITEM_HEIGHT);
+    var new_item = new item.Item(new gamejs.Rect([x, y], [0, 0]), type);
+
+    room.items.push(new_item);
+  }
 }
 
 Map.prototype.get = function(id) {
@@ -122,6 +139,8 @@ Map.prototype.generate_map = function() {
       this._room_map[i][j].generate_walls(hole_position[ay-1][ax],hole_position[ay][ax+1],hole_position[ay+1][ax],hole_position[ay][ax-1]);
     }
   }
+  this.generate_items(item.ITEM_BOOK_FIREBALL, 3);
+  this.generate_items(item.ITEM_BOOK_LIGHTNING, 3);
 }
 
 exports.Map = Map;
