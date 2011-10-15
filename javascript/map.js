@@ -128,3 +128,7 @@ Map.prototype.generate_map = function() {
 }
 
 exports.Map = Map;
+exports.MAP_UP = MAP_UP;
+exports.MAP_RIGHT = MAP_RIGHT;
+exports.MAP_DOWN = MAP_DOWN;
+exports.MAP_LEFT = MAP_LEFT;
