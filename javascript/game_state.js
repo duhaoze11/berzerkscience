@@ -5,6 +5,7 @@ var assert = require('assert');
 var map = require('map');
 var gamejs = require('gamejs');
 var projectile = require('projectile');
+var effect = require('effect');
 
 function GameState() {
 }
@@ -20,6 +21,7 @@ GameState.prototype.Init = function(map, current_room, player) {
   this.ENEMY_PROJECTILES_LIMIT = 10;
   this.current_room.calculate_distances_from_start(-1);
   this.current_room.generate_robots();
+  this.effects = new Array();
 }
 
 GameState.prototype.changeRoomIfNeeded = function() {
@@ -62,6 +64,7 @@ GameState.prototype.changeRoomIfNeeded = function() {
   this.player_projectiles = new Array();
   this.player.num_projectiles = 0;
   this.enemy_projectiles = new Array();
+  this.effects = new Array();
 }
 
 GameState.prototype.reinit_room = function() {
@@ -181,6 +184,20 @@ GameState.prototype.update_player_powerups = function() {
     }
     this.current_room.items = new_items;
   }
+}
+
+GameState.prototype.update_effects = function(ms, display) {
+  window.console.log('update effects');
+  var new_effects = new Array();
+  for (var i = 0; i < this.effects.length; i++) {
+    var eff = this.effects[i];
+    eff.update(ms);
+    if (!eff.expired) {
+      new_effects.push(eff);
+    }
+    eff.draw(display);
+  }
+  this.effects = new_effects;
 }
 
 exports.game_state = global_game_state;
