@@ -7,7 +7,7 @@ var main = require('main');
 var PROJECTILE_WIDTH = 20;
 var PROJECTILE_HEIGHT = 20;
 
-var MAX_PROJECTILE_SPEED = 250; // pixels per second
+var MAX_PROJECTILE_SPEED = 300; // pixels per second
 
 gamejs.preload(['graphics/projectiles/fireball.png']);
 
