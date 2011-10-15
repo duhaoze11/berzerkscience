@@ -45,7 +45,6 @@ Effect.prototype.update = function(ms) {
     return;
   }
   var center = [this.rect.left + this.rect.width / 2, this.rect.top + this.rect.height / 2];
-  window.console.log('center : ' + center);
   var size = this.end_size * this.timer / this.end_time;
   this.rect = new gamejs.Rect([center[0] - size / 2, center[1] - size / 2], [size, size]);
   this.alpha = this.timer / this.end_time;

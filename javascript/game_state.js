@@ -6,12 +6,13 @@ var map = require('map');
 var gamejs = require('gamejs');
 var projectile = require('projectile');
 var effect = require('effect');
+var item = require('item');
 
 function GameState() {
 }
 
-GameState.prototype.Init = function(map, current_room, player) {
-  this.map = map;
+GameState.prototype.Init = function(m, current_room, player) {
+  this.map = m;
   this.current_room = current_room;
   this.player = player;
   this._save_where_player_entered = new gamejs.Rect(this.player.rect);
@@ -21,6 +22,19 @@ GameState.prototype.Init = function(map, current_room, player) {
   this.ENEMY_PROJECTILES_LIMIT = 10;
   this.current_room.calculate_distances_from_start(-1);
   this.current_room.generate_robots();
+
+  var max = -1;
+  var index = 0;
+  for (var i = 0; i < map.NUM_ROOMS; i++) {
+    var r = this.map.get(i);
+    if (r._distance_from_start > max) {
+      max = r._distance_from_start;
+      index = i;
+    }
+  }
+  //window.console.log('unicorn in room ' + index);
+  this.map.generate_items(item.ITEM_UNICORN, 1, index);
+
   this.effects = new Array();
 }
 
@@ -160,6 +174,9 @@ GameState.prototype.update_player_powerups = function() {
   var removed;
   for (var i = 0; i < this.current_room.items.length; i++) {
     var cur_item = this.current_room.items[i];
+    if (cur_item.type == item.ITEM_UNICORN) {
+      continue;
+    }
     if (cur_item.rect.collideRect(this.player.rect)) {
       removed = i;
       if (this.player.weapon_type != cur_item.type) {
@@ -187,7 +204,6 @@ GameState.prototype.update_player_powerups = function() {
 }
 
 GameState.prototype.update_effects = function(ms, display) {
-  window.console.log('update effects');
   var new_effects = new Array();
   for (var i = 0; i < this.effects.length; i++) {
     var eff = this.effects[i];

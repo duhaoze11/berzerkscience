@@ -28,9 +28,9 @@ var proj_properties = [[], // no weapon
                           new ProjStats(500, 200)
                       ],
                       [   new ProjStats(0,0), // enemy bullet
-                          new ProjStats(150, 50),
-                          new ProjStats(150, 50),
-                          new ProjStats(150, 50),
+                          new ProjStats(250, 50),
+                          new ProjStats(250, 50),
+                          new ProjStats(250, 50),
                       ],
                       ];
 
