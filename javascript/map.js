@@ -9,8 +9,8 @@ var MAP_RIGHT = 1;
 var MAP_DOWN = 2;
 var MAP_LEFT = 3;
 
-var MAP_HEIGHT = 1;
-var MAP_WIDTH = 2;
+var MAP_HEIGHT = 5;
+var MAP_WIDTH = 5;
 
 function Map() {
   this._room_map = new Array();
