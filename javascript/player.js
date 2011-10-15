@@ -72,4 +72,5 @@ Player.prototype.update = function(ms) {
 }
 
 exports.Player = Player;
-
+exports.PLAYER_WIDTH = PLAYER_WIDTH;
+exports.PLAYER_HEIGHT = PLAYER_HEIGHT;
