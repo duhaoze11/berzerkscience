@@ -14,7 +14,8 @@ var orange_robot_image = 'graphics/robots/orange.png';
 var red_robot_image = 'graphics/robots/red.png';
 var yellow_robot_image = 'graphics/robots/yellow.png';
 var tractor1_robot_image = 'graphics/robots/tractor1.png';
-var robot_images = [ orange_robot_image, red_robot_image, yellow_robot_image, tractor1_robot_image ];
+var tractor2_robot_image = 'graphics/robots/tractor2.png';
+var robot_images = [ orange_robot_image, red_robot_image, yellow_robot_image, tractor1_robot_image, tractor2_robot_image ];
 
 gamejs.preload(robot_images);
 
@@ -76,10 +77,13 @@ Enemy.prototype._select_new_waypoint = function() {
 
 Enemy.prototype.update = function(ms) {
   var pos = [this.rect.left, this.rect.top];
-  var dir = vectors.truncate(vectors.subtract(this._going_to, pos), this._speed * ms);
-  this._make_sliding_move(dir[0], dir[1]);
-  if (vectors.len(dir) < this._speed * ms * 0.5) {
-    this._going_to = this._select_new_waypoint();
+  this._going_to = this._select_new_waypoint();
+  var dir = vectors.subtract(this._going_to, pos);
+  var len = vectors.len(dir);
+  if (len > 1e-4) {
+    var len_togo = this._speed * ms;
+    var dir_togo = vectors.multiply(vectors.unit(dir), len_togo);
+    this._make_sliding_move(dir_togo[0], dir_togo[1]);
   }
 }
 
