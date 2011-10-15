@@ -7,7 +7,7 @@ var START_Y = 312;
 var PLAYER_WIDTH = 40;
 var PLAYER_HEIGHT = 40;
 
-var MAX_SPEED = 100; // pixels per second
+var MAX_SPEED = 150; // pixels per second
 
 gamejs.preload(['graphics/wizard/left.png']);
 
