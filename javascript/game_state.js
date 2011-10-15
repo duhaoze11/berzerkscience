@@ -52,9 +52,20 @@ GameState.prototype.changeRoomIfNeeded = function() {
       break;
   }
 
+  this._save_where_player_entered = this.player.rect;
+
   // delete all player's projectiles as we changed room
   this.player_projectiles = new Array();
   this.player.num_projectiles = 0;
+  this.enemy_projectiles = new Array();
+}
+
+GameState.prototype.reinit_room = function() {
+  this.player.rect = this._save_where_player_entered;
+  this.current_room.generate_robots();
+  this.player_projectiles = new Array();
+  this.player.num_projectiles = 0;
+  this.enemy_projectiles = new Array();
 }
 
 GameState.prototype.current_room_id = function() {
@@ -67,6 +78,10 @@ GameState.prototype.add_player_projectile = function(proj) {
   this.player_projectiles.push(proj);
 }
 
+GameState.prototype.add_enemy_projectile = function(proj) {
+  this.enemy_projectiles.push(proj);
+}
+
 GameState.prototype.update_player_projectiles = function(ms, display) {
   var new_projectiles = new Array();
   for (var i = 0; i < this.player_projectiles.length; i++) {
@@ -76,7 +91,7 @@ GameState.prototype.update_player_projectiles = function(ms, display) {
       this.player.num_projectiles--;
     } else if (proj.collides(this.current_room._walls_to_draw)
                || proj.collides(this.current_room._robots)) {
-      proj.explode(this.current_room);
+      proj.explode(this.current_room, true, false);
       this.player.num_projectiles--;
     } else {
       new_projectiles.push(proj);
@@ -85,6 +100,23 @@ GameState.prototype.update_player_projectiles = function(ms, display) {
   }
   this.player_projectiles = new_projectiles;
   assert.assert(this.player.num_projectiles == this.player_projectiles.length, "projectiles limit");
+}
+
+GameState.prototype.update_enemy_projectiles = function(ms, display) {
+  var new_projectiles = new Array();
+  for (var i = 0; i < this.enemy_projectiles.length; i++) {
+    var proj = this.enemy_projectiles[i];
+    proj.update(ms);
+    if (proj.outside()) {
+    } else if (proj.collides(this.current_room._walls_to_draw)
+               || proj.collides([player])) {
+      proj.explode(this.current_room, false, true);
+    } else {
+      new_projectiles.push(proj);
+    }
+    proj.draw(display);
+  }
+  this.enemy_projectiles = new_projectiles;
 }
 
 function get_weapon_name(type) {
