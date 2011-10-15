@@ -11,6 +11,11 @@ var ROOM_WIDTH = 9;
 var WALL_SMALL = 25;
 var WALL_BIG = 175;
 
+var floorImages =(['graphics/floor/abstract1.png',
+                   'graphics/floor/abstract2.png',
+                   'graphics/floor/wood1.png']);
+gamejs.preload(floorImages);
+
 function Room(id) {
   this._id = id;
   this._state = new Array();
@@ -20,6 +25,9 @@ function Room(id) {
       this._state[i][j] = 0;
     }
   }
+  var index = Math.floor(Math.random() * 3);
+  // TODO(zvold): preload the images to global state and reuse image objects here
+  this.floorTile = gamejs.image.load(floorImages[index]);
 }
 
 Room.prototype.id = function() {
@@ -44,6 +52,14 @@ function get_type(x, y) {
 
 Room.prototype.draw = function(display) {
   var mainSurface = gamejs.display.getSurface();
+
+  var TILE_SIZE = WALL_BIG + WALL_SMALL;
+  for (var i = 0; i < 1 + main.SCREEN_WIDTH / TILE_SIZE; i++) {
+    for (var j = 0; j < 1 + main.SCREEN_HEIGHT / TILE_SIZE; j++) {
+      mainSurface.blit(this.floorTile, [i * TILE_SIZE, j * TILE_SIZE]);
+    }
+  }
+
   for (var i = 0; i < this._walls_to_draw.length; i++) {
     var w = this._walls_to_draw[i];
     assert.assert(w.rect.top + w.rect.height <= main.SCREEN_HEIGHT, "y out of screen");
