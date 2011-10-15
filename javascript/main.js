@@ -9,9 +9,6 @@ var game_state = require('game_state');
 var SCREEN_WIDTH = 825;
 var SCREEN_HEIGHT= 625;
 
-var WALL_SMALL = 20;
-var WALL_BIG = 180;
-
 gamejs.ready(function() {
 
     var display = gamejs.display.setMode([SCREEN_WIDTH, SCREEN_HEIGHT]);
@@ -31,9 +28,10 @@ gamejs.ready(function() {
           }
         });
         display.clear();
-        r.draw(display);
 
         p.update(ms);
+
+        r.draw(display);
         p.draw(display);
         return;
     };
