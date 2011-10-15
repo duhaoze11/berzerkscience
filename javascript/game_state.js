@@ -166,7 +166,7 @@ GameState.prototype.update_player_powerups = function() {
   }
 
   // TODO(zvold): refactor this item removal to be not so WTF
-  /**if (remove != undefined) {
+  if (removed != undefined) {
     var new_items = new Array();
     for (var i = 0; i < this.current_room.items.length; i++) {
       if (i != removed) {
@@ -174,7 +174,7 @@ GameState.prototype.update_player_powerups = function() {
       }
     }
     this.current_room.items = new_items;
-  }*/
+  }
 }
 
 exports.game_state = global_game_state;
