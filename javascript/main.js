@@ -17,8 +17,7 @@ gamejs.ready(function() {
 
     var m = new map.Map();
     m.generate_map();
-
-    var r = m.get(6);
+    var r = m.get(0);
     var p = new player.Player();
 
     function tick(ms) {
@@ -37,3 +36,6 @@ gamejs.ready(function() {
     };
     gamejs.time.fpsCallback(tick, this, 40);
 });
+
+exports.SCREEN_WIDTH = SCREEN_WIDTH;
+exports.SCREEN_HEIGHT = SCREEN_HEIGHT;

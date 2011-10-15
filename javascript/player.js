@@ -16,7 +16,6 @@ function Player() {
   this.image = gamejs.image.load("graphics/wizard/left.png");
   this.rect = new gamejs.Rect([START_X - PLAYER_WIDTH / 2, START_Y - PLAYER_HEIGHT / 2],
                               [PLAYER_WIDTH, PLAYER_HEIGHT]);
-  this.speed = [0, 0];
 }
 
 gamejs.utils.objects.extend(Player, gamejs.sprite.Sprite);
