@@ -12,7 +12,7 @@ GameState.prototype.Init = function(map, current_room, player) {
   this.map = map;
   this.current_room = current_room;
   this.player = player;
-  this._save_where_player_entered = this.player.rect;
+  this._save_where_player_entered = new gamejs.Rect(this.player.rect);
 
   this.player_projectiles = new Array();
   this.enemy_projectiles = new Array();
@@ -54,7 +54,7 @@ GameState.prototype.changeRoomIfNeeded = function() {
       break;
   }
 
-  this._save_where_player_entered = this.player.rect;
+  this._save_where_player_entered = new gamejs.Rect(this.player.rect);
 
   // delete all player's projectiles as we changed room
   this.player_projectiles = new Array();
@@ -63,7 +63,7 @@ GameState.prototype.changeRoomIfNeeded = function() {
 }
 
 GameState.prototype.reinit_room = function() {
-  this.player.rect = this._save_where_player_entered;
+  this.player.rect = new gamejs.Rect(this._save_where_player_entered);
   this.current_room.generate_robots();
   this.player_projectiles = new Array();
   this.player.num_projectiles = 0;
