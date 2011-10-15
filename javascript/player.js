@@ -24,8 +24,8 @@ function Player() {
                               [PLAYER_WIDTH, PLAYER_HEIGHT]);
   this.speed = [0, 0];
   this.num_projectiles = 0;
-  this.weapon_type = projectile.WEAPON_FIREBALL;
-  this.weapon_level = 3;
+  this.weapon_type = projectile.WEAPON_NONE;
+  this.weapon_level = 0;
 }
 
 gamejs.utils.objects.extend(Player, unit.Unit);
