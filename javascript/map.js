@@ -9,8 +9,8 @@ var MAP_RIGHT = 1;
 var MAP_DOWN = 2;
 var MAP_LEFT = 3;
 
-var MAP_HEIGHT = 5;
-var MAP_WIDTH = 5;
+var MAP_HEIGHT = 1;
+var MAP_WIDTH = 2;
 
 function Map() {
   this._room_map = new Array();
@@ -18,7 +18,7 @@ function Map() {
   var room_cnt = 0;
   for (var i = 0; i < MAP_HEIGHT; i++) {
     this._room_map[i] = new Array();
-    for (var j = 0; j < MAP_HEIGHT; j++) {
+    for (var j = 0; j < MAP_WIDTH; j++) {
       this._room_map[i][j] = new room.Room(room_cnt);
       this._rooms_by_id[room_cnt] = this._room_map[i][j];
       room_cnt++;
@@ -85,6 +85,7 @@ Map.prototype.generate_map = function() {
     }
   }
   for (var i = 0; i < MAP_HEIGHT; i++) {
+      window.console.log(this._room_map[i].length);
     for (var j = 0; j < MAP_WIDTH-1; j++){
       edges[cnt] = new edge.Edge(this._room_map[i][j].id(), this._room_map[i][j+1].id());
       cnt++;

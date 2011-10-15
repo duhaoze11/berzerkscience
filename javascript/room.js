@@ -3,6 +3,7 @@ var drawing = require('gamejs/draw');
 var wall = require('wall');
 var edge = require('edge');
 var assert = require('assert');
+var main = require('main');
 
 var ROOM_HEIGHT = 7;
 var ROOM_WIDTH = 9;
@@ -25,8 +26,8 @@ Room.prototype.id = function() {
   return this._id;
 }
 
-Room.prototype.get = function(x,y) {
-  return this._state[y][x];
+Room.prototype.get = function(i,j) {
+  return this._state[i][j];
 }
 
 function get_edge(p) {
@@ -37,33 +38,40 @@ function get_width(p) {
   return ((p % 2) == 0) ? WALL_SMALL : WALL_BIG;
 }
 
-function get_type(i, j) {
-  return (i % 2) + (j % 2) * 2;
+function get_type(x, y) {
+  return (x % 2) + (y % 2) * 2;
 }
 
 Room.prototype.draw = function(display) {
   var mainSurface = gamejs.display.getSurface();
-  for (var i=0; i<ROOM_WIDTH; i++) {
-    for (var j=0; j<ROOM_HEIGHT; j++) {
-      var left = get_edge(i);
-      var width = get_width(i);
-      var up = get_edge(j);
-      var height = get_width(j);
-      if (this.get(i, j) == 1) {
-        switch (get_type(i, j)) {
-          case 3:
-            drawing.rect(display, '#0000ff', new gamejs.Rect([left, up], [width, height]), 1);
-            break;
-          case 0:
-          case 1:
-          case 2:
-            var w = new wall.Wall(get_type(i, j), new gamejs.Rect([left, up], [width, height]));
-            w.draw(mainSurface);
-            break;
-        }
+  for (var i = 0; i < this._walls_to_draw.length; i++) {
+    var w = this._walls_to_draw[i];
+    window.console.log(w.rect.top+w.rect.height);
+    assert.assert(w.rect.top + w.rect.height <= main.SCREEN_HEIGHT, "y out of screen");
+    assert.assert(w.rect.left + w.rect.width <= main.SCREEN_WIDTH, "x out of screen");
+    w.draw(mainSurface);
+  }
+}
+
+Room.prototype._build_walls_rects = function() {
+  this._walls_to_draw = new Array();
+  var walls_cnt = 0;
+  for (var i = 0; i < ROOM_HEIGHT; i++) {
+    var s = '';
+    for (var j = 0; j < ROOM_WIDTH; j++) {
+      s += this.get(i,j);
+      if (this.get(i,j) == 1) {
+        var left = get_edge(i);
+        var width = get_width(i);
+        var up = get_edge(j);
+        var height = get_width(j);
+        this._walls_to_draw[walls_cnt] = new wall.Wall(get_type(j, i), new gamejs.Rect(up,left,height,width));
+        walls_cnt++;
       }
     }
+    window.console.log(s);
   }
+  assert.assert(walls_cnt == this._walls_to_draw.length, "incorrect number of walls to draw");
 }
 
 Room.prototype.generate_walls = function(pos_up, pos_right, pos_down, pos_left) {
@@ -134,6 +142,8 @@ Room.prototype.generate_walls = function(pos_up, pos_right, pos_down, pos_left) 
       }
     }
   }
+
+  this._build_walls_rects();
 }
 
 exports.Room = Room;
