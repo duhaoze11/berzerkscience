@@ -11,7 +11,7 @@ function Edge(x, y) {
 
 Edge.prototype.comparator = function(a,b) {
   if (a.weight < b.weight) return -1;
-  if (a.weight > b.weight) return -1;
+  if (a.weight > b.weight) return 1;
   if (a.x < b.x) return -1;
   if (a.x > b.x) return 1;
   if (a.y < b.y) return -1;
@@ -19,27 +19,33 @@ Edge.prototype.comparator = function(a,b) {
   return 0;
 }
 
+Edge.prototype._getcomp = function(v) {
+  if (this._comp[v] == v) return v;
+  return this._comp[v] = this._getcomp(this._comp[v]);
+}
+
 Edge.prototype.build_mst = function(edges) {
-  edges.sort(Edge.prototype.comparator);
-
-  var comp = new Array();
+  var mx = -1;
   for (var i = 0; i < edges.length; i++) {
-    comp[i] = i;
+    var e = edges[i];
+    if (e.x > mx) mx = e.x;
+    if (e.y > mx) mx = e.y;
   }
-
-  var getcomp = function(v) {
-    if (comp[v] == v) return v;
-    return comp[v] = getcomp(comp[v]);
+  edges.sort(Edge.prototype.comparator);
+  this._comp = new Array();
+  for (var i = 0; i <= mx; i++) {
+    this._comp[i] = i;
   }
 
   var room_connections_cnt = 0;
   var room_connections = new Array();
   for (var i = 0; i < edges.length; i++) {
-    var x = getcomp(edges[i].x);
-    var y = getcomp(edges[i].y);
+    var e = edges[i];
+    var x = this._getcomp(e.x);
+    var y = this._getcomp(e.y);
     if (x == y) continue;
-    comp[x] = comp[y];
-    room_connections[room_connections_cnt] = new pair.Pair(edges[i].x, edges[i].y);
+    this._comp[x] = this._comp[y];
+    room_connections[room_connections_cnt] = new pair.Pair(e.x, e.y);
     room_connections_cnt++;
   }
 

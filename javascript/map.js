@@ -61,14 +61,11 @@ Map.prototype.get_neighbour = function(id, dir) {
   return -1;
 }
 
-Map.prototype._rand_int = function(max) {
-  return Math.floor(Math.random()*(max+1));
-}
-
 Map.prototype.is_connected = function(x,y) {
   for (var i = 0; i < this._room_connections.length; i++) {
-    if (this._room_connections[i].x == x && this._room_connections[i].y == y) return true;
-    if (this._room_connections[i].x == y && this._room_connections[i].y == x) return true;
+    var c = this._room_connections[i];
+    if (c.x == x && c.y == y) return true;
+    if (c.x == y && c.y == x) return true;
   }
   return false;
 }
@@ -78,7 +75,6 @@ Map.prototype._rand_int = function(n) {
 }
 
 Map.prototype.generate_map = function() {
-  window.console.log('generate_map');
   var cnt = 0;
   var edges = new Array();
   var BIG_NUMBER = 1e6;
@@ -115,10 +111,10 @@ Map.prototype.generate_map = function() {
       var down_id = dy < MAP_HEIGHT ? this._room_map[dy][dx].id() : -1;
 
       if (right_id >= 0 && this.is_connected(cur_id, right_id)) {
-        hole_position[ry*2+1][rx*2] = this._rand_int(Math.floor(room.ROOM_HEIGHT/2));
+        hole_position[ry*2+1][rx*2] = this._rand_int(room.ROOM_HEIGHT >> 1);
       }
       if (down_id >= 0 && this.is_connected(cur_id, down_id)) {
-        hole_position[dy*2][dx*2+1] = this._rand_int(Math.floor(room.ROOM_WIDTH/2));
+        hole_position[dy*2][dx*2+1] = this._rand_int(room.ROOM_WIDTH >> 1);
       }
     }
   }
