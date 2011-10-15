@@ -5,6 +5,7 @@ var game_state = require('game_state');
 var vectors = require('gamejs/utils/vectors');
 var main = require('main');
 var unit = require('unit');
+var astar = require('gamejs/pathfinding/astar');
 
 var ENEMY_WIDTH = exports.ENEMY_WIDTH = 40;
 var ENEMY_HEIGHT = exports.ENEMY_HEIGHT = 40;
@@ -35,8 +36,42 @@ Enemy.StateEnum = {
   ALIVE : 2,
 }
 
+function RoomMap(r) {
+  var PER_CELL = 4;
+  for (var i = 0; i < room.ROOM_HEIGHT; i++) {
+    for (var j = 0; j < room.ROOM_WIDTH; j++) {
+      for (var k = 0; k < PER_CELL; k++) {
+        for (var l = 0; l < PER_CELL; l++) {
+        }
+      }
+    }
+  }
+}
+
+Enemy.prototype._select_astar_path = function() {
+  return [this.rect.left + Math.random() * 40 - 20, this.rect.top + Math.random() * 40 - 20];
+}
+
 Enemy.prototype._select_new_waypoint = function() {
-  return [this.rect.left + 40 * Math.random() - 20, this.rect.top + 40 * Math.random() - 20];
+  var p = game_state.game_state.player.rect;
+  var line = [ [this.rect.left, this.rect.top], [p.left, p.top] ];
+  var r = game_state.game_state.current_room;
+  for (var i = 0; i < r._walls_to_draw.length; i++) {
+    var z = r._walls_to_draw[i].rect;
+    var tocheck = new gamejs.Rect(z.left-ENEMY_WIDTH,z.top-ENEMY_HEIGHT,z.width+ENEMY_WIDTH,z.height+ENEMY_HEIGHT);
+    if (tocheck.collideLine(line[0], line[1])) {
+      return this._select_astar_path();
+    }
+  }
+  var dir = vectors.subtract([p.left, p.top], [this.rect.left, this.rect.top]);
+  var len = vectors.len(dir);
+  var eps = 1e-4;
+  if (len > eps) {
+    var dist_togo = vectors.truncate(len * 0.25);
+    var dir_togo = vectors.multiply(vectors.unit(dir), dist_togo);
+    return vectors.add([p.left, p.top], dir_togo);
+  }
+  return [this.rect.left, this.rect.top];
 }
 
 Enemy.prototype.update = function(ms) {

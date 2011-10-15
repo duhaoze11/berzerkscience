@@ -10,8 +10,8 @@ var map = require('map');
 var game_state = require('game_state');
 var unit = require('unit');
 
-var ROOM_HEIGHT = 7;
-var ROOM_WIDTH = 9;
+var ROOM_HEIGHT = exports.ROOM_HEIGHT = 7;
+var ROOM_WIDTH = exports.ROOM_WIDTH = 9;
 
 var WALL_SMALL = 25;
 var WALL_BIG = 175;
@@ -248,6 +248,3 @@ Room.prototype.update = function(ms) {
 }
 
 exports.Room = Room;
-exports.ROOM_HEIGHT = ROOM_HEIGHT;
-exports.ROOM_WIDTH = ROOM_WIDTH;
-
