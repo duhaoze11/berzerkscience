@@ -110,4 +110,37 @@ GameState.prototype.render_game_stats = function(display) {
   display.blit(surface, [(main.SCREEN_WIDTH - surface.rect.width) / 2, 0]);
 }
 
+GameState.prototype.update_player_powerups = function() {
+  if (this.current_room.items.length == 0) {
+    return;
+  }
+  var removed;
+  for (var i = 0; i < this.current_room.items.length; i++) {
+    var cur_item = this.current_room.items[i];
+    if (cur_item.rect.collideRect(this.player.rect)) {
+      removed = i;
+      if (this.player.weapon_type != cur_item.type) {
+        this.player.weapon_level = 1;
+      } else {
+        if (this.player.weapon_level == projectile.MAX_WEAPON_LEVEL) {
+          return;
+        }
+        this.player.weapon_level++;
+      }
+      this.player.weapon_type = cur_item.type;
+    }
+  }
+
+  // TODO(zvold): refactor this item removal to be not so WTF
+  /**if (remove != undefined) {
+    var new_items = new Array();
+    for (var i = 0; i < this.current_room.items.length; i++) {
+      if (i != removed) {
+        new_items.push(this.current_room.items[i]);
+      }
+    }
+    this.current_room.items = new_items;
+  }*/
+}
+
 exports.game_state = global_game_state;
