@@ -44,9 +44,10 @@ function Map() {
 }
 
 Map.prototype.generate_items = function(type, num, id) {
+  var flag = (id == undefined);
   // generate 3 firebooks at random rooms
   for (var i = 0; i < num; i++) {
-    if (id == undefined) {
+    if (flag) {
       id = utils.rand_int(NUM_ROOMS);
     }
     var room = this._rooms_by_id[id];
