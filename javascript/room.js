@@ -243,6 +243,8 @@ Room.prototype._generate_robot_position = function() {
     var px = Math.random() * main.SCREEN_WIDTH;
     var py = Math.random() * main.SCREEN_HEIGHT;
     var rect = new gamejs.Rect(px, py, enemy.ENEMY_WIDTH, enemy.ENEMY_HEIGHT);
+    var vx = px + enemy.ENEMY_WIDTH*0.5;
+    var vy = py + enemy.ENEMY_HEIGHT*0.5;
     var u = new unit.Unit();
     u.rect = rect;
     if (!u._can_be_placed(rect.left, rect.top)) {
@@ -251,7 +253,7 @@ Room.prototype._generate_robot_position = function() {
     var p = game_state.game_state.player.rect;
     var cx = p.left + p.width*0.5;
     var cy = p.top + p.height*0.5;
-    if (vectors.distance([px,py], [cx,cy]) < 175) {
+    if (vectors.distance([vx,vy], [cx,cy]) < 250) {
       continue;
     }
     return rect;

@@ -96,6 +96,16 @@ Player.prototype.update = function(ms) {
   var dx = this.speed[0] * ms / 1000;
   var dy = this.speed[1] * ms / 1000;
   this._make_sliding_move(dx,dy);
+  var killed = false;
+  for (var i = 0; i < game_state.game_state.current_room._robots.length; i++) {
+    var z = game_state.game_state.current_room._robots[i].rect;
+    if (z.collideRect(this.rect)) {
+      killed = true;
+    }
+  }
+  if (killed) {
+    game_state.game_state.reinit_room();
+  }
 }
 
 exports.Player = Player;
