@@ -3,11 +3,13 @@ var drawing = require('gamejs/draw');
 var assert = require('assert');
 var sprite = require('gamejs/sprite');
 var main = require('main');
+var enemy = require('enemy');
 
 var PROJECTILE_WIDTH = 20;
 var PROJECTILE_HEIGHT = 20;
 
 var MAX_PROJECTILE_SPEED = 300; // pixels per second
+var EXPLOSION_RADIUS = 150;
 
 gamejs.preload(['graphics/projectiles/fireball.png']);
 
@@ -47,6 +49,27 @@ Projectile.prototype.collides = function(sprites) {
   return false;
 }
 
+Projectile.prototype.explode = function(room) {
+  var new_robots = new Array();
+  var center = [this.rect.left + PROJECTILE_WIDTH / 2, this.rect.top + PROJECTILE_HEIGHT / 2];
+
+  for (var i = 0; i < room._robots.length; i++) {
+    var robot = room._robots[i];
+    var robot_center = [robot.rect.left + enemy.ENEMY_WIDTH / 2, robot.rect.top + enemy.ENEMY_HEIGHT / 2];
+    var dx = center[0] - robot_center[0];
+    var dy = center[1] - robot_center[1];
+    var len = Math.sqrt(dx * dx + dy * dy);
+    if (len > EXPLOSION_RADIUS || room.wall_collides_line(center, robot_center)) {
+      new_robots.push(robot);
+    } else {
+      window.console.log('hit');
+    }
+  }
+  room._robots = new_robots;
+}
+
 exports.Projectile = Projectile;
 exports.PROJECTILE_WIDTH = PROJECTILE_WIDTH;
 exports.PROJECTILE_HEIGHT = PROJECTILE_HEIGHT;
+
+

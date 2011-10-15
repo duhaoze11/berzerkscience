@@ -247,4 +247,13 @@ Room.prototype.update = function(ms) {
   }
 }
 
+Room.prototype.wall_collides_line = function(point1, point2) {
+  for (var i = 0; i < this._walls_to_draw.length; i++) {
+    if (this._walls_to_draw[i].rect.collideLine(point1, point2)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 exports.Room = Room;
