@@ -68,7 +68,6 @@ Enemy.prototype._select_astar_path = function() {
     }
   }
   if (who == undefined) { 
-    alert('who netu');
     return [this.rect.left,this.rect.top];
   }
   var dx = [0,1,0,-1];
@@ -88,7 +87,6 @@ Enemy.prototype._select_astar_path = function() {
     }
   }
   if (to == undefined) {
-    alert('to netu');
     return [this.rect.left,this.rect.top];
   }
   var x0 = room.get_edge(to[1]);
