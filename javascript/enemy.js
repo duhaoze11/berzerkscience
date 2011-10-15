@@ -36,12 +36,12 @@ Enemy.StateEnum = {
 }
 
 Enemy.prototype._select_new_waypoint = function() {
-  return [Math.random() * main.SCREEN_WIDTH, Math.random() * main.SCREEN_HEIGHT];
+  return [this.rect.left + 40 * Math.random() - 20, this.rect.top + 40 * Math.random() - 20];
 }
 
 Enemy.prototype.update = function(ms) {
   var pos = [this.rect.left, this.rect.top];
-  var dir = vectors.truncate(vectors.subtract(pos, this._going_to), this._speed * ms);
+  var dir = vectors.truncate(vectors.subtract(this._going_to, pos), this._speed * ms);
   this._make_sliding_move(dir[0], dir[1]);
   if (vectors.len(dir) < this._speed * ms * 0.5) {
     this._going_to = this._select_new_waypoint();
