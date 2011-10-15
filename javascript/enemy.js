@@ -24,7 +24,7 @@ function Enemy(type, rect) {
   this.image = gamejs.image.load(robot_images[this._type]);
   this.rect = rect;
   this._going_to = [this.rect.left, this.rect.top];
-  this._speed = 5;
+  this._speed = 0.05;
   this.state = Enemy.StateEnum.ALIVE;
 }
 
@@ -39,13 +39,11 @@ Enemy.prototype._select_new_waypoint = function() {
   return [Math.random() * main.SCREEN_WIDTH, Math.random() * main.SCREEN_HEIGHT];
 }
 
-Enemy.prototype.update = function() {
+Enemy.prototype.update = function(ms) {
   var pos = [this.rect.left, this.rect.top];
-  alert(pos);
-  alert(this._going_to);
-  var dir = vectors.truncate(vectors.subtract(pos, this._going_to), this._speed);
+  var dir = vectors.truncate(vectors.subtract(pos, this._going_to), this._speed * ms);
   this._make_sliding_move(dir[0], dir[1]);
-  if (vectors.distance(dir) < 5) {
+  if (vectors.len(dir) < this._speed * ms * 0.5) {
     this._going_to = this._select_new_waypoint();
   }
 }

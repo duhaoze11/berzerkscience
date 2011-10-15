@@ -212,7 +212,6 @@ Room.prototype.generate_walls = function(pos_up, pos_right, pos_down, pos_left) 
 }
 
 Room.prototype._get_initial_number_of_robots = function() {
-  return 1;
   return this._distance_from_start * 5 + 10;
 }
 
@@ -237,6 +236,14 @@ Room.prototype.generate_robots = function() {
       alert('born dead');
       this._robots[i].become_dead();
     }
+  }
+}
+
+Room.prototype.update = function(ms) {
+  for (var i = 0; i < this._robots.length; i++) {
+    var r = this._robots[i];
+    if (r.state == enemy.Enemy.StateEnum.DEAD) continue;
+    r.update(ms);
   }
 }
 

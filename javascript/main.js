@@ -33,6 +33,7 @@ gamejs.ready(function() {
         p.update(ms);
         game_state.game_state.changeRoomIfNeeded();
 
+        game_state.game_state.current_room.update(ms);
         game_state.game_state.current_room.draw(display);
         p.draw(display);
 
