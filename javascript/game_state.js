@@ -68,14 +68,14 @@ GameState.prototype.add_player_projectile = function(proj) {
 GameState.prototype.update_player_projectiles = function(ms, display) {
   var new_projectiles = new Array();
   for (var i = 0; i < this.player_projectiles.length; i++) {
-    this.player_projectiles[i].update(ms);
-    if (!this.player_projectiles[i].outside() &&
-        !this.player_projectiles[i].collides(this.current_room._walls_to_draw)) {
-      new_projectiles.push(this.player_projectiles[i]);
+    var proj = this.player_projectiles[i];
+    proj.update(ms);
+    if (!proj.outside() && !proj.collides(this.current_room._walls_to_draw)) {
+      new_projectiles.push(proj);
     } else {
       this.player.num_projectiles--;
     }
-    this.player_projectiles[i].draw(display);
+    proj.draw(display);
   }
   this.player_projectiles = new_projectiles;
   assert.assert(this.player.num_projectiles == this.player_projectiles.length, "projectiles limit");
