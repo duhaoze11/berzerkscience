@@ -25,6 +25,16 @@ Unit.prototype._can_be_placed = function(pos_x, pos_y) {
 
 Unit.prototype._make_sliding_move = function(dx, dy) {
   var cur_pos = [this.rect.left, this.rect.top];
+  if (!this._can_be_placed(cur_pos[0], cur_pos[1])) {
+    for (var tries = 0; tries < 50; tries++) {
+      var x = Math.random * main.SCREEN_WIDTH;
+      var y = Math.random * main.SCREEN_HEIGHT;
+      if (this._can_be_placed(x,y)) {
+        cur_pos = [x,y];
+        break;
+      }
+    }
+  }
   assert.assert(this._can_be_placed(cur_pos[0], cur_pos[1]), "must be able to place itself");
   if (!this._can_be_placed(cur_pos[0]+dx, cur_pos[1] )) {
     var l = 0;
