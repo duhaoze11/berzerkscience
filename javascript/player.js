@@ -15,11 +15,12 @@ var MAX_SPEED = 150; // pixels per second
 var MAX_PROJECTILES = 5; // maximum number of allowed projectiles
 
 gamejs.preload(['graphics/wizard/left.png',
-                'graphics/wizard/down.png']);
+                'graphics/wizard/down.png',
+                'graphics/wizard/front_an1.png']);
 
 function Player() {
   Player.superConstructor.apply(this, arguments);
-  this.image = gamejs.image.load("graphics/wizard/down.png");
+  this.image = gamejs.image.load("graphics/wizard/front_an1.png");
   this.rect = new gamejs.Rect([START_X - PLAYER_WIDTH / 2, START_Y - PLAYER_HEIGHT / 2],
                               [PLAYER_WIDTH, PLAYER_HEIGHT]);
   this.speed = [0, 0];
