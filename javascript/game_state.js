@@ -2,6 +2,8 @@ var main = require('main');
 var player = require('player');
 var assert = require('assert');
 var map = require('map');
+var gamejs = require('gamejs');
+var projectile = require('projectile');
 
 function GameState() {
 }
@@ -83,6 +85,29 @@ GameState.prototype.update_player_projectiles = function(ms, display) {
   }
   this.player_projectiles = new_projectiles;
   assert.assert(this.player.num_projectiles == this.player_projectiles.length, "projectiles limit");
+}
+
+function get_weapon_name(type) {
+  switch (type) {
+    case projectile.WEAPON_FIREBALL:
+      return 'fireball';
+    case projectile.WEAPON_LIGHTNING:
+      return 'lightning';
+    default:
+      return 'none';
+  }
+}
+
+GameState.prototype.render_game_stats = function(display) {
+  var surface_letters = (new gamejs.font.Font('30px Couriew New')).render(
+      'room ' + this.current_room.id()
+      + ', weapon: ' + get_weapon_name(this.player.weapon_type)
+      + ' ' + this.player.weapon_level);
+  var surface = new gamejs.Surface(surface_letters.rect);
+  surface.fill('#ffffff');
+  surface.blit(surface_letters);
+  surface.setAlpha(0.4);
+  display.blit(surface, [(main.SCREEN_WIDTH - surface.rect.width) / 2, 0]);
 }
 
 exports.game_state = global_game_state;
