@@ -23,7 +23,8 @@ gamejs.ready(function() {
     function tick(ms) {
         gamejs.event.get().forEach(function(event) {
           if (event.type === gamejs.event.KEY_DOWN ||
-              event.type === gamejs.event.KEY_UP) {
+              event.type === gamejs.event.KEY_UP ||
+              event.type === gamejs.event.MOUSE_DOWN) {
             p.processUserInput(event);
           }
         });
