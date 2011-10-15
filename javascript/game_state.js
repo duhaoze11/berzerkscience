@@ -70,10 +70,14 @@ GameState.prototype.update_player_projectiles = function(ms, display) {
   for (var i = 0; i < this.player_projectiles.length; i++) {
     var proj = this.player_projectiles[i];
     proj.update(ms);
-    if (!proj.outside() && !proj.collides(this.current_room._walls_to_draw)) {
-      new_projectiles.push(proj);
-    } else {
+    if (proj.outside()) {
       this.player.num_projectiles--;
+    } else if (proj.collides(this.current_room._walls_to_draw)
+               || proj.collides(this.current_room._robots)) {
+      proj.explode(this.current_room);
+      this.player.num_projectiles--;
+    } else {
+      new_projectiles.push(proj);
     }
     proj.draw(display);
   }
