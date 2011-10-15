@@ -260,8 +260,8 @@ Room.prototype._update_room_map = function() {
       if (this.get(i,j) == 1) continue;
       var x0 = get_edge(j);
       var y0 = get_edge(i);
-      var dx = get_edge(j+1);
-      var dy = get_edge(i+1);
+      var dx = get_edge(j+1)-x0;
+      var dy = get_edge(i+1)-y0;
       if (x0 <= r[0] && x0+dx >= r[0] && y0 <= r[1] && y0+dy >= r[1]) {
         dist[i][j] = 0;
         queue[fr] = [i,j];
@@ -293,6 +293,7 @@ Room.prototype._update_room_map = function() {
     }
     window.console.log(s);
   }
+    window.console.log('---------------------------');
 }
 
 Room.prototype.update = function(ms) {
