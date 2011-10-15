@@ -31,14 +31,14 @@ GameState.prototype.changeRoomIfNeeded = function() {
 
   var room_id = this.map.get_neighbour(this.current_room.id(), exit);
   window.console.log(room_id);
-//  assert.assert(room_id == -1, "exit detected incorrectly");
+  assert.assert(room_id != -1, "exit detected incorrectly");
   this.current_room = this.map.get(room_id);
   switch (exit) {
     case map.MAP_LEFT:
       this.player.rect.left = main.SCREEN_WIDTH - player.PLAYER_WIDTH;
       break;
     case map.MAP_RIGHT:
-      this.player.rect.left = 10;
+      this.player.rect.left = 0;
       break;
     case map.MAP_UP:
       this.player.rect.top = main.SCREEN_HEIGHT - player.PLAYER_HEIGHT;
