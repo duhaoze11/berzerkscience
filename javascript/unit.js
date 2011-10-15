@@ -27,7 +27,7 @@ Unit.prototype._can_be_placed = function(pos_x, pos_y) {
 Unit.prototype._make_sliding_move = function(dx, dy) {
   var cur_pos = [this.rect.left, this.rect.top];
   if (!this._can_be_placed(cur_pos[0], cur_pos[1])) {
-    for (var tries = 0; tries < 50; tries++) {
+    for (;;) {
       var x = Math.random * main.SCREEN_WIDTH * 0.3 + main.SCREEN_WIDTH * 0.5;
       var y = Math.random * main.SCREEN_HEIGHT * 0.3 + main.SCREEN_HEIGHT * 0.5;
       if (this._can_be_placed(x,y)) {
