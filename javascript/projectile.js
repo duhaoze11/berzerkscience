@@ -3,7 +3,9 @@ var drawing = require('gamejs/draw');
 var assert = require('assert');
 var sprite = require('gamejs/sprite');
 var main = require('main');
+var player = require('player');
 var enemy = require('enemy');
+var game_state = require('game_state');
 
 var PROJECTILE_WIDTH = 20;
 var PROJECTILE_HEIGHT = 20;
@@ -22,16 +24,25 @@ var proj_properties = [[], // no weapon
                           new ProjStats(0, 0),
                           new ProjStats(300, 0),
                           new ProjStats(350, 50),
-                          new ProjStats(0, 200)]
+                          new ProjStats(0, 200)
+                      ],
+                      [   new ProjStats(0,0), // enemy bullet
+                          new ProjStats(100, 50),
+                          new ProjStats(100, 50),
+                          new ProjStats(100, 50),
+                      ],
                       ];
 
 var WEAPON_NONE = 0;
 var WEAPON_FIREBALL = 1;
 var WEAPON_LIGHTNING = 2;
+var WEAPON_ENEMY_BULLET = 3;
 
 var MAX_WEAPON_LEVEL = 3;
 
 gamejs.preload(['graphics/projectiles/fireball.png']);
+gamejs.preload(['graphics/projectiles/lightning.png']);
+gamejs.preload(['graphics/projectiles/bullet.png']);
 
 // rect - rectangle with (left, top) specifying where to put projectile's center
 // speed - direction vector, not necessarily normalized
@@ -44,8 +55,11 @@ function Projectile(rect, speed, type, level) {
     case WEAPON_FIREBALL:
       this.image = gamejs.image.load("graphics/projectiles/fireball.png");
       break;
-    case WEAPON_LIGHNING:
+    case WEAPON_LIGHTNING:
       this.image = gamejs.image.load("graphics/projectiles/fireball.png");
+      break;
+    case WEAPON_ENEMY_BULLET:
+      this.image = gamejs.image.load("graphics/projectiles/bullet.png");
       break;
     default:
       assert.assert(false, "weapon type unsupported");
@@ -84,23 +98,42 @@ Projectile.prototype.collides = function(sprites) {
   return false;
 }
 
-Projectile.prototype.explode = function(room) {
-  var new_robots = new Array();
-  var center = [this.rect.left + PROJECTILE_WIDTH / 2, this.rect.top + PROJECTILE_HEIGHT / 2];
+Projectile.prototype.explode = function(room, kills_robots, kills_player) {
+  if (this.radius < 0) {
+    this._kill_single();
+  } else {
+    var new_robots = new Array();
+    var center = [this.rect.left + PROJECTILE_WIDTH / 2, this.rect.top + PROJECTILE_HEIGHT / 2];
 
-  for (var i = 0; i < room._robots.length; i++) {
-    var robot = room._robots[i];
-    var robot_center = [robot.rect.left + enemy.ENEMY_WIDTH / 2, robot.rect.top + enemy.ENEMY_HEIGHT / 2];
-    var dx = center[0] - robot_center[0];
-    var dy = center[1] - robot_center[1];
-    var len = Math.sqrt(dx * dx + dy * dy);
-    if (len > this.radius || room.wall_collides_line(center, robot_center)) {
-      new_robots.push(robot);
-    } else {
-      window.console.log('hit');
+    if (kills_robots) {
+      for (var i = 0; i < room._robots.length; i++) {
+        var robot = room._robots[i];
+        var robot_center = [robot.rect.left + enemy.ENEMY_WIDTH / 2, robot.rect.top + enemy.ENEMY_HEIGHT / 2];
+        var dx = center[0] - robot_center[0];
+        var dy = center[1] - robot_center[1];
+        var len = Math.sqrt(dx * dx + dy * dy);
+        if (len > this.radius || room.wall_collides_line(center, robot_center)) {
+          new_robots.push(robot);
+        } else {
+          window.console.log('hit');
+        }
+      }
+      room._robots = new_robots;
+    }
+    if (kills_player) {
+      var p = game_state.game_state.player;
+      var r = p.rect;
+      var player_center = [r.left + player.PLAYER_WIDTH * 0.5, r.top + player.PLAYER_HEIGHT * 0.5];
+      var dx = center[0] - player_center[0];
+      var dy = center[1] - player_center[1];
+      var len = Math.sqrt(dx*dx + dy*dy);
+      if (len > this.radius || room.wall_collides_line(center, player_center)) {
+
+      } else {
+        game_state.game_state.reinit_room();
+      }
     }
   }
-  room._robots = new_robots;
 }
 
 exports.Projectile = Projectile;
@@ -112,3 +145,4 @@ exports.WEAPON_FIREBALL = WEAPON_FIREBALL;
 exports.WEAPON_LIGHTNING = WEAPON_LIGHTNING;
 
 exports.MAX_WEAPON_LEVEL = MAX_WEAPON_LEVEL;
+exports.WEAPON_ENEMY_BULLET = WEAPON_ENEMY_BULLET;
