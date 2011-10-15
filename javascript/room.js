@@ -46,7 +46,6 @@ Room.prototype.draw = function(display) {
   var mainSurface = gamejs.display.getSurface();
   for (var i = 0; i < this._walls_to_draw.length; i++) {
     var w = this._walls_to_draw[i];
-    window.console.log(w.rect.top+w.rect.height);
     assert.assert(w.rect.top + w.rect.height <= main.SCREEN_HEIGHT, "y out of screen");
     assert.assert(w.rect.left + w.rect.width <= main.SCREEN_WIDTH, "x out of screen");
     w.draw(mainSurface);
@@ -69,7 +68,6 @@ Room.prototype._build_walls_rects = function() {
         walls_cnt++;
       }
     }
-    window.console.log(s);
   }
   assert.assert(walls_cnt == this._walls_to_draw.length, "incorrect number of walls to draw");
 }

@@ -85,7 +85,6 @@ Map.prototype.generate_map = function() {
     }
   }
   for (var i = 0; i < MAP_HEIGHT; i++) {
-      window.console.log(this._room_map[i].length);
     for (var j = 0; j < MAP_WIDTH-1; j++){
       edges[cnt] = new edge.Edge(this._room_map[i][j].id(), this._room_map[i][j+1].id());
       cnt++;
