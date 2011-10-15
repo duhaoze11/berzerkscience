@@ -3,6 +3,7 @@ var drawing = require('gamejs/draw');
 var sprite = require('gamejs/sprite');
 var game_state = require('game_state');
 var assert = require('assert');
+var main = require('main');
 
 function Unit() {
 }
