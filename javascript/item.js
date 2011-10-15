@@ -10,7 +10,8 @@ var ITEM_BOOK_FIREBALL = 1;
 var ITEM_BOOK_LIGHTNING = 2;
 var ITEM_UNICORN = 3;
 
-gamejs.preload(['graphics/items/firebook.png']);
+gamejs.preload(['graphics/items/firebook.png',
+                'graphics/items/lightningbook.png']);
 
 // rect - rectangle with (left, top) specifying where to put item's top left corner
 function Item(rect, type) {
@@ -23,7 +24,7 @@ function Item(rect, type) {
       this.image = gamejs.image.load("graphics/items/firebook.png");
       break;
     case ITEM_BOOK_LIGHTNING:
-      this.image = gamejs.image.load("graphics/items/firebook.png");
+      this.image = gamejs.image.load("graphics/items/lightningbook.png");
       break;
     default:
       assert.assert(false, "item type unsupported : " + type);
