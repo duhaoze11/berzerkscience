@@ -35,6 +35,7 @@ function Room(id) {
   var index = utils.rand_int(floorImages.length);
   // TODO(zvold): preload the images to global state and reuse image objects here
   this.floorTile = gamejs.image.load(floorImages[index]);
+  this.items = new Array();
 }
 
 Room.prototype.id = function() {
@@ -119,6 +120,10 @@ Room.prototype.draw = function(display) {
       continue;
     }
     r.draw(mainSurface);
+  }
+
+  for (var i = 0; i < this.items.length; i++) {
+    this.items[i].draw(mainSurface);
   }
 }
 

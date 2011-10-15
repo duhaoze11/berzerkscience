@@ -26,7 +26,7 @@ function Player() {
   //this.weapon_type = projectile.WEAPON_NONE;
   //this.weapon_level = 0;
   this.weapon_type = projectile.WEAPON_FIREBALL;
-  this.weapon_level = 2;
+  this.weapon_level = 1;
 }
 
 gamejs.utils.objects.extend(Player, unit.Unit);
