@@ -28,8 +28,8 @@ Unit.prototype._make_sliding_move = function(dx, dy) {
   var cur_pos = [this.rect.left, this.rect.top];
   if (!this._can_be_placed(cur_pos[0], cur_pos[1])) {
     for (var tries = 0; tries < 50; tries++) {
-      var x = Math.random * main.SCREEN_WIDTH;
-      var y = Math.random * main.SCREEN_HEIGHT;
+      var x = Math.random * main.SCREEN_WIDTH * 0.3 + main.SCREEN_WIDTH * 0.5;
+      var y = Math.random * main.SCREEN_HEIGHT * 0.3 + main.SCREEN_HEIGHT * 0.5;
       if (this._can_be_placed(x,y)) {
         cur_pos = [x,y];
         break;
