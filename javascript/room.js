@@ -9,6 +9,7 @@ var utils = require('utils');
 var map = require('map');
 var game_state = require('game_state');
 var unit = require('unit');
+var vectors = require('gamejs/utils/vectors');
 
 var ROOM_HEIGHT = exports.ROOM_HEIGHT = 7;
 var ROOM_WIDTH = exports.ROOM_WIDTH = 9;
@@ -220,21 +221,40 @@ Room.prototype.generate_walls = function(pos_up, pos_right, pos_down, pos_left) 
 }
 
 Room.prototype._get_initial_number_of_robots = function() {
-  var d = this._distance_from_start;
+  var d = (this._distance_from_start+1)*3;
   var low = Math.floor((d + 1) * 0.5);
   var hi = Math.floor((d + 1));
   return low + utils.rand_int(hi-low+1);
 }
 
+function non_uniform_distribution() {
+  var sum = 0;
+  var ADDITIVES = 3;
+  for (var t = 0; t < ADDITIVES; t++){
+    sum += Math.random();
+  }
+  return sum / ADDITIVES;
+}
+
 Room.prototype._generate_robot_position = function() {
+  
   var r = game_state.current_room;
   for (var tries = 0;tries < 50; tries++) {
-    var rect = new gamejs.Rect(Math.random() * (main.SCREEN_WIDTH - enemy.ENEMY_WIDTH), Math.random() * (main.SCREEN_HEIGHT - enemy.ENEMY_HEIGHT), enemy.ENEMY_WIDTH, enemy.ENEMY_HEIGHT);
+    var px = Math.random() * main.SCREEN_WIDTH;
+    var py = Math.random() * main.SCREEN_HEIGHT;
+    var rect = new gamejs.Rect(px, py, enemy.ENEMY_WIDTH, enemy.ENEMY_HEIGHT);
     var u = new unit.Unit();
     u.rect = rect;
-    if (u._can_be_placed(rect.left, rect.top)) {
-      return rect;
+    if (!u._can_be_placed(rect.left, rect.top)) {
+      continue;
     }
+    var p = game_state.game_state.player.rect;
+    var cx = p.left + p.width*0.5;
+    var cy = p.top + p.height*0.5;
+    if (vectors.distance([px,py], [cx,cy]) < 175) {
+      continue;
+    }
+    return rect;
   }
   return undefined;
 }
@@ -244,7 +264,7 @@ Room.prototype.generate_robots = function() {
   for (var i = 0; i < this._get_initial_number_of_robots(); i++) {
     this._robots[i] = new enemy.Enemy(utils.rand_int(enemy.number_of_kinds), this._generate_robot_position());
     if (this._robots[i].rect == undefined) {
-      alert('born dead');
+      window.console.log('born dead robot');
       this._robots[i].become_dead();
     }
   }
@@ -290,13 +310,13 @@ Room.prototype._update_room_map = function() {
   }
   this._cell_map = dist;
   /**
-  for (var i = 0; i < ROOM_HEIGHT; i++) {
+    for (var i = 0; i < ROOM_HEIGHT; i++) {
     s = '';
     for (var j = 0; j < ROOM_WIDTH; j++) {
-      s += dist[i][j] + ' ';
+    s += dist[i][j] + ' ';
     }
     window.console.log(s);
-  }
+    }
     window.console.log('---------------------------');
     */
 }
