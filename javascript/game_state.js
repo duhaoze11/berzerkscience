@@ -10,9 +10,9 @@ GameState.prototype.Init = function(map, current_room, player) {
   this.map = map;
   this.current_room = current_room;
   this.player = player;
+  this.current_room.calculate_distances_from_start(-1);
+  this.current_room.generate_robots();
 }
-
-var global_game_state = new GameState();
 
 GameState.prototype.changeRoomIfNeeded = function() {
   var exit;
@@ -30,9 +30,9 @@ GameState.prototype.changeRoomIfNeeded = function() {
   }
 
   var room_id = this.map.get_neighbour(this.current_room.id(), exit);
-  window.console.log(room_id);
   assert.assert(room_id != -1, "exit detected incorrectly");
   this.current_room = this.map.get(room_id);
+  this.current_room.generate_robots();
   switch (exit) {
     case map.MAP_LEFT:
       this.player.rect.left = main.SCREEN_WIDTH - player.PLAYER_WIDTH;
@@ -53,4 +53,5 @@ GameState.prototype.current_room_id = function() {
   return this.current_room.id();
 }
 
+var global_game_state = new GameState();
 exports.game_state = global_game_state;
