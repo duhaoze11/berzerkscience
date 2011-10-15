@@ -38,6 +38,15 @@ Projectile.prototype.outside = function() {
       || this.rect.top < 0 || this.rect.top > main.SCREEN_HEIGHT);
 }
 
+Projectile.prototype.collides = function(sprites) {
+  for (var i = 0; i < sprites.length; i++) {
+    if (this.rect.collideRect(sprites[i].rect)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 exports.Projectile = Projectile;
 exports.PROJECTILE_WIDTH = PROJECTILE_WIDTH;
 exports.PROJECTILE_HEIGHT = PROJECTILE_HEIGHT;

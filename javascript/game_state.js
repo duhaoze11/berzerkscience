@@ -69,7 +69,8 @@ GameState.prototype.update_player_projectiles = function(ms, display) {
   var new_projectiles = new Array();
   for (var i = 0; i < this.player_projectiles.length; i++) {
     this.player_projectiles[i].update(ms);
-    if (!this.player_projectiles[i].outside()) {
+    if (!this.player_projectiles[i].outside() &&
+        !this.player_projectiles[i].collides(this.current_room._walls_to_draw)) {
       new_projectiles.push(this.player_projectiles[i]);
     } else {
       this.player.num_projectiles--;
