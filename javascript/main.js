@@ -35,6 +35,8 @@ gamejs.ready(function() {
 
         game_state.game_state.current_room.draw(display);
         p.draw(display);
+
+        game_state.game_state.update_player_projectiles(ms, display);
         return;
     };
     gamejs.time.fpsCallback(tick, this, 40);

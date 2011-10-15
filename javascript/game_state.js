@@ -10,6 +10,8 @@ GameState.prototype.Init = function(map, current_room, player) {
   this.map = map;
   this.current_room = current_room;
   this.player = player;
+
+  this.player_projectiles = new Array();
   this.current_room.calculate_distances_from_start(-1);
   this.current_room.generate_robots();
 }
@@ -47,6 +49,10 @@ GameState.prototype.changeRoomIfNeeded = function() {
       this.player.rect.top = 0;
       break;
   }
+
+  // delete all player's projectiles as we changed room
+  this.player_projectiles = new Array();
+  this.player.num_projectiles = 0;
 }
 
 GameState.prototype.current_room_id = function() {
@@ -56,7 +62,22 @@ GameState.prototype.current_room_id = function() {
 var global_game_state = new GameState();
 
 GameState.prototype.add_player_projectile = function(proj) {
-//  window.console.log(proj);
+  this.player_projectiles.push(proj);
+}
+
+GameState.prototype.update_player_projectiles = function(ms, display) {
+  var new_projectiles = new Array();
+  for (var i = 0; i < this.player_projectiles.length; i++) {
+    this.player_projectiles[i].update(ms);
+    if (!this.player_projectiles[i].outside()) {
+      new_projectiles.push(this.player_projectiles[i]);
+    } else {
+      this.player.num_projectiles--;
+    }
+    this.player_projectiles[i].draw(display);
+  }
+  this.player_projectiles = new_projectiles;
+  assert.assert(this.player.num_projectiles == this.player_projectiles.length, "projectiles limit");
 }
 
 exports.game_state = global_game_state;
