@@ -99,7 +99,7 @@ function get_weapon_name(type) {
 }
 
 GameState.prototype.render_game_stats = function(display) {
-  var surface_letters = (new gamejs.font.Font('30px Couriew New')).render(
+  var surface_letters = (new gamejs.font.Font('20px Arial')).render(
       'room ' + this.current_room.id()
       + ', weapon: ' + get_weapon_name(this.player.weapon_type)
       + ' ' + this.player.weapon_level);
