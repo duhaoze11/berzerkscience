@@ -48,7 +48,7 @@ Map.prototype.get_neighbour = function(id, dir) {
   assert.assert(id >= 0, "room id must be >= 0");
   for (var i = 0; i < MAP_HEIGHT; i++) {
     for (var j = 0; j < MAP_WIDTH; j++) {
-      if (_room_map[i][j].id() == id) {
+      if (this._room_map[i][j].id() == id) {
         var ay = i + this._dy[dir];
         var ax = j + this._dx[dir];
         if (ay >= 0 && ay < MAP_HEIGHT && ax >= 0 && ax < MAP_WIDTH) {
