@@ -31,7 +31,7 @@ function Enemy(type, rect) {
   this._speed = 0.02+0.01*type;
   this.state = Enemy.StateEnum.ALIVE;
   this.time_from_last_shot = 1e6;
-  this.fire_rate = 500;
+  this.fire_rate = 1500;
 }
 
 gamejs.utils.objects.extend(Enemy, unit.Unit);
