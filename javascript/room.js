@@ -1,9 +1,14 @@
 var gamejs = require('gamejs');
 var drawing = require('gamejs/draw');
 var wall = require('wall');
+var enemy = require('enemy');
 var edge = require('edge');
 var assert = require('assert');
 var main = require('main');
+var utils = require('utils');
+var map = require('map');
+var game_state = require('game_state');
+var unit = require('unit');
 
 var ROOM_HEIGHT = 7;
 var ROOM_WIDTH = 9;
@@ -25,7 +30,7 @@ function Room(id) {
       this._state[i][j] = 0;
     }
   }
-  var index = Math.floor(Math.random() * 3);
+  var index = utils.rand_int(3);
   // TODO(zvold): preload the images to global state and reuse image objects here
   this.floorTile = gamejs.image.load(floorImages[index]);
 }
@@ -50,6 +55,44 @@ function get_type(x, y) {
   return (x % 2) + (y % 2) * 2;
 }
 
+Room.prototype.calculate_distances_from_start = function(parent) {
+  var m = game_state.game_state.map;
+  if (parent < 0) {
+    this._distance_from_start = 0;
+  } else {
+    this._distance_from_start = m.get(parent)._distance_from_start+1;
+  }
+  var v = this.id();
+  for (var i = 1; i < ROOM_HEIGHT; i+=2) {
+    if (this.get(i,0) == 0) {
+      var p = m.get_neighbour(v, map.MAP_LEFT);
+      if (p != parent) {
+        m.get(p).calculate_distances_from_start(v);
+      }
+    }
+    if (this.get(i,ROOM_WIDTH-1) == 0) {
+      var p = m.get_neighbour(v, map.MAP_RIGHT);
+      if (p != parent) {
+        m.get(p).calculate_distances_from_start(v);
+      }
+    }
+  }
+  for (var i = 1; i < ROOM_WIDTH; i+=2) {
+    if (this.get(0,i) == 0) {
+      var p = m.get_neighbour(v, map.MAP_UP);
+      if (p != parent) {
+        m.get(p).calculate_distances_from_start(v);
+      }
+    }
+    if (this.get(ROOM_HEIGHT-1, i) == 0) {
+      var p = m.get_neighbour(v, map.MAP_DOWN);
+      if (p != parent) {
+        m.get(p).calculate_distances_from_start(v);
+      }
+    }
+  }
+}
+
 Room.prototype.draw = function(display) {
   var mainSurface = gamejs.display.getSurface();
 
@@ -65,6 +108,14 @@ Room.prototype.draw = function(display) {
     assert.assert(w.rect.top + w.rect.height <= main.SCREEN_HEIGHT, "y out of screen");
     assert.assert(w.rect.left + w.rect.width <= main.SCREEN_WIDTH, "x out of screen");
     w.draw(mainSurface);
+  }
+
+  for (var i = 0; i < this._robots.length; i++) {
+    var r = this._robots[i];
+    if (r.state == enemy.Enemy.StateEnum.DEAD) {
+      continue;
+    }
+    r.draw(mainSurface);
   }
 }
 
@@ -158,6 +209,33 @@ Room.prototype.generate_walls = function(pos_up, pos_right, pos_down, pos_left) 
   }
 
   this._build_walls_rects();
+}
+
+Room.prototype._get_initial_number_of_robots = function() {
+  return this._distance_from_start * 5 + 10;
+}
+
+Room.prototype._generate_robot_position = function() {
+  var r = game_state.current_room;
+  for (var tries = 0;tries < 50; tries++) {
+    var rect = new gamejs.Rect(Math.random() * main.SCREEN_WIDTH, Math.random() * main.SCREEN_HEIGHT, enemy.ENEMY_WIDTH, enemy.ENEMY_HEIGHT);
+    var u = new unit.Unit();
+    u.rect = rect;
+    if (u._can_be_placed(rect.left, rect.top)) {
+      return rect;
+    }
+  }
+  return undefines;
+}
+
+Room.prototype.generate_robots = function() {
+  this._robots = new Array();
+  for (var i = 0; i < this._get_initial_number_of_robots(); i++) {
+    this._robots[i] = new enemy.Enemy(i%3, this._generate_robot_position());
+    if (this._robots[i].rect == undefined) {
+      this._robots[i].become_dead();
+    }
+  }
 }
 
 exports.Room = Room;

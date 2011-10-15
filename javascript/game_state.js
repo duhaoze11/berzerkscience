@@ -12,9 +12,9 @@ GameState.prototype.Init = function(map, current_room, player) {
   this.player = player;
 
   this.player_projectiles = new Array();
+  this.current_room.calculate_distances_from_start(-1);
+  this.current_room.generate_robots();
 }
-
-var global_game_state = new GameState();
 
 GameState.prototype.changeRoomIfNeeded = function() {
   var exit;
@@ -34,6 +34,7 @@ GameState.prototype.changeRoomIfNeeded = function() {
   var room_id = this.map.get_neighbour(this.current_room.id(), exit);
   assert.assert(room_id != -1, "exit detected incorrectly");
   this.current_room = this.map.get(room_id);
+  this.current_room.generate_robots();
   switch (exit) {
     case map.MAP_LEFT:
       this.player.rect.left = main.SCREEN_WIDTH - player.PLAYER_WIDTH;
@@ -57,6 +58,8 @@ GameState.prototype.changeRoomIfNeeded = function() {
 GameState.prototype.current_room_id = function() {
   return this.current_room.id();
 }
+
+var global_game_state = new GameState();
 
 GameState.prototype.add_player_projectile = function(proj) {
   this.player_projectiles.push(proj);
