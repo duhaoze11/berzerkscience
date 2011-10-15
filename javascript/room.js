@@ -220,7 +220,10 @@ Room.prototype.generate_walls = function(pos_up, pos_right, pos_down, pos_left) 
 }
 
 Room.prototype._get_initial_number_of_robots = function() {
-  return this._distance_from_start * 5 + 10;
+  var d = this._distance_from_start;
+  var low = Math.floor((d + 1) * 0.5);
+  var hi = Math.floor((d + 1));
+  return low + utils.rand_int(hi-low+1);
 }
 
 Room.prototype._generate_robot_position = function() {
@@ -233,7 +236,7 @@ Room.prototype._generate_robot_position = function() {
       return rect;
     }
   }
-  return undefines;
+  return undefined;
 }
 
 Room.prototype.generate_robots = function() {

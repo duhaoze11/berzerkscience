@@ -30,8 +30,8 @@ function Enemy(type, rect) {
   this._going_to = [this.rect.left, this.rect.top];
   this._speed = 0.02+0.01*type;
   this.state = Enemy.StateEnum.ALIVE;
-  this.time_from_last_shot = 1e6;
   this.fire_rate = 1500;
+  this.time_from_last_shot = -4000;
 }
 
 gamejs.utils.objects.extend(Enemy, unit.Unit);
@@ -120,7 +120,7 @@ Enemy.prototype.update = function(ms) {
     var dir_togo = vectors.multiply(vectors.unit(dir), len_togo);
     this._make_sliding_move(dir_togo[0], dir_togo[1]);
   }
-  if (this.time_from_last_shot > this.fire_rate) {
+  if (this.time_from_last_shot > this.fire_rate && game_state.game_state.enemy_projectiles.length < game_state.game_state.ENEMY_PROJECTILES_LIMIT) {
     var shoot_from = [ this.rect.left + this.rect.width*0.5, this.rect.top + this.rect.height*0.5 ];
   var p = game_state.game_state.player.rect;
     var shoot_to = [ p.left + p.width*0.5, p.top + p.height*0.5 ];

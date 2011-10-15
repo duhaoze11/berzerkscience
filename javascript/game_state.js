@@ -1,5 +1,6 @@
 var main = require('main');
 var player = require('player');
+var enemy = require('enemy');
 var assert = require('assert');
 var map = require('map');
 var gamejs = require('gamejs');
@@ -16,6 +17,7 @@ GameState.prototype.Init = function(map, current_room, player) {
 
   this.player_projectiles = new Array();
   this.enemy_projectiles = new Array();
+  this.ENEMY_PROJECTILES_LIMIT = 10;
   this.current_room.calculate_distances_from_start(-1);
   this.current_room.generate_robots();
 }
@@ -113,6 +115,10 @@ GameState.prototype.update_enemy_projectiles = function(ms, display) {
     } else if (proj.collides(this.current_room._walls_to_draw)
                || proj.collides([this.player])) {
       proj.explode(this.current_room, false, true);
+      if (this.enemy_projectiles.length == 0) {
+        this.enemy_projectiles = new Array();
+        return;
+      }
     } else {
       new_projectiles.push(proj);
     }
