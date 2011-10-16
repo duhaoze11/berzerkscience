@@ -10,12 +10,13 @@ var GAMESTATE_GAMEOVER = 1;
 var GAMESTATE_GAMEWIN = 2;
 var GAMESTATE_PLAYING = 1000;
 var GAMESTATE_SCREENS = 1001;
+var GAMESTATE_INITIALIZING = 6;
 
 var state_machine = [
   // 0th game state is always the start screen
   new GameScreen(undefined, 'start screen',
     [[5, 'BERZERK SCIENCE', -1],
-     [15, 'START', GAMESTATE_PLAYING],
+     [15, 'START', GAMESTATE_INITIALIZING],
      [17, 'INSTRUCTIONS', 3],
      [19, 'CREDITS', 5]]),
   // 1th game state is GAMESTATE_GAMEOVER
@@ -42,7 +43,9 @@ var state_machine = [
       [6, 'zvold', -1],
       [8, 'Art', -1],
       [10, 'yuliya', -1],
-      [20, 'DONE', 0]])
+      [20, 'DONE', 0]]),
+  new GameScreen(undefined, 'initializing',
+     [[10, 'INITIALIZING', -1]])
   ];
 
 function GameScreen(image_file, name, transitions) {
@@ -77,14 +80,14 @@ GameScreen.prototype.processUserInput = function(event) {
     case gamejs.event.MOUSE_DOWN:
       for (var i = 0; i < this.transitions.length; i++) {
         var transition = this.transitions[i];
-        if (transition[3] == -1) {
+        if (transition[2] == -1) {
           continue;
         }
         var y_coord = transition[0] * font.LETTER_HEIGHT;
         if (event.pos[1] > y_coord && event.pos[1] < y_coord + font.LETTER_HEIGHT) {
           var next_state = transition[2];
-          if (next_state == GAMESTATE_PLAYING) {
-            game_state.game_state.machine_state = GAMESTATE_PLAYING;
+          if (next_state == GAMESTATE_INITIALIZING) {
+            game_state.game_state.machine_state = GAMESTATE_INITIALIZING;
           } else {
             game_state.game_state.machine_state = GAMESTATE_SCREENS;
             window.console.log('next state: ' + next_state);
@@ -102,4 +105,5 @@ exports.GAMESTATE_GAMEOVER = GAMESTATE_GAMEOVER;
 exports.GAMESTATE_GAMEWIN = GAMESTATE_GAMEWIN;
 exports.GAMESTATE_PLAYING = GAMESTATE_PLAYING;
 exports.GAMESTATE_SCREENS = GAMESTATE_SCREENS;
+exports.GAMESTATE_INITIALIZING = GAMESTATE_INITIALIZING;
 exports.state_machine = state_machine;

@@ -15,6 +15,7 @@ gamejs.ready(function() {
 
     var display = gamejs.display.setMode([SCREEN_WIDTH, SCREEN_HEIGHT]);
 
+    // TODO(zvold): not necessary, it's done in INITIALIZING case below
     var m = new map.Map();
     m.generate_map();
     var p = new player.Player();
@@ -35,6 +36,14 @@ gamejs.ready(function() {
               machine_screen.processUserInput(event);
             }
           });
+          break;
+        case gamescreen.GAMESTATE_INITIALIZING:
+          m = new map.Map();
+          m.generate_map();
+          p = new player.Player();
+          room_id = 0;
+          game_state.game_state.Init(m, m.get(room_id), p);
+          game_state.game_state.machine_state = gamescreen.GAMESTATE_PLAYING;
           break;
         case gamescreen.GAMESTATE_PLAYING:
           game_state.game_state.statistics._game_time += ms;

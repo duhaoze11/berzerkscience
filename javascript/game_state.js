@@ -189,14 +189,6 @@ GameState.prototype.render_game_stats = function(display) {
     text += ', ' + get_weapon_name(this.player.weapon_type)
       + ' ' + this.player.weapon_level;
   }
-/*  var surface_letters = (new gamejs.font.Font('20px Arial')).render(
-      'room ' + this.current_room.id()
-      + ', weapon: ' + get_weapon_name(this.player.weapon_type)
-      + ' ' + this.player.weapon_level);
-  var surface = new gamejs.Surface(surface_letters.rect);
-  surface.fill('#ffffff');
-  surface.blit(surface_letters);
-*/
   var surface = font.global_font.generate_surface(text);
 
   surface.setAlpha(0.4);
@@ -210,7 +202,10 @@ GameState.prototype.update_player_powerups = function() {
   var removed;
   for (var i = 0; i < this.current_room.items.length; i++) {
     var cur_item = this.current_room.items[i];
-    if (cur_item.type == item.ITEM_UNICORN) {
+    if (cur_item.type == item.ITEM_UNICORN &&
+        cur_item.rect.collideRect(this.player.rect)) {
+      this.machine_state = gamescreen.GAMESTATE_SCREENS;
+      this.machine_screen_id = gamescreen.GAMESTATE_GAMEWIN;
       continue;
     }
     if (cur_item.rect.collideRect(this.player.rect)) {
