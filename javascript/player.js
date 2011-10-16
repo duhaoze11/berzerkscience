@@ -29,10 +29,15 @@ gamejs.preload(['graphics/wizard/left.png',
                 'graphics/wizard/front_an1.png',
                 'graphics/wizard/front_an2.png',
                 'graphics/wizard/front_an3.png',
+                'graphics/wizard/death_an1.png',
+                'graphics/wizard/death_an2.png',
+                'graphics/wizard/death_an3.png',
                ]);
 
 var NUM_FRAMES = 4;
 var FRAME_TIME_MS = 300;
+var DEAD_ANIMATION = 4;
+var DEAD_ANIMATION_FRAMES = 3;
 
 var player_animation = new Array();
 // init all player's animation sprites
@@ -61,6 +66,11 @@ function preload_animation() {
     gamejs.image.load('graphics/wizard/front_an3.png'),
     gamejs.image.load('graphics/wizard/front_an2.png'),
   ];
+  player_animation[DEAD_ANIMATION] = [
+    gamejs.image.load('graphics/wizard/death_an1.png'),
+    gamejs.image.load('graphics/wizard/death_an2.png'),
+    gamejs.image.load('graphics/wizard/death_an3.png'),
+  ];
 }
 
 function Player() {
@@ -70,13 +80,16 @@ function Player() {
   this.image = gamejs.image.load("graphics/wizard/front_an1.png");
   this.rect = new gamejs.Rect([START_X - PLAYER_WIDTH / 2, START_Y - PLAYER_HEIGHT / 2],
                               [PLAYER_WIDTH, PLAYER_HEIGHT]);
-  this.speed = [0, 0];
-  this.num_projectiles = 0;
-  this.weapon_type = projectile.WEAPON_NONE;
-  this.weapon_level = 0;
-  this.frame = 0;
-  this.frame_time = 0;
-
+  this.reinit = function() {
+    this.speed = [0, 0];
+    this.num_projectiles = 0;
+    this.weapon_type = projectile.WEAPON_NONE;
+    this.weapon_level = 0;
+    this.frame = 0;
+    this.frame_time = 0;
+    this.is_alive = true;
+  }
+  this.reinit();
   //window.console.log(player_animation[map.MAP_RIGHT]);
 }
 
@@ -146,7 +159,7 @@ Player.prototype.create_projectile = function(e) {
   }
   var player_center = this.center();
   var direction = [e.pos[0] + projectile.PROJECTILE_WIDTH / 2 - player_center[0],
-                   e.pos[1] + projectile.PROJECTILE_HEIGHT / 2 - player_center[1]];
+      e.pos[1] + projectile.PROJECTILE_HEIGHT / 2 - player_center[1]];
   var proj = new projectile.Projectile(new gamejs.Rect(player_center), direction, this.weapon_type, this.weapon_level);
   this.num_projectiles++;
   game_state.game_state.add_player_projectile(proj);
@@ -158,6 +171,7 @@ Player.prototype.create_projectile = function(e) {
 }
 
 Player.prototype.processUserInput = function(event) {
+  if (this.is_alive != true) return;
   switch (event.type) {
     case gamejs.event.KEY_DOWN:
       this.speed_up(event);
@@ -172,6 +186,22 @@ Player.prototype.processUserInput = function(event) {
 }
 
 Player.prototype.update = function(ms) {
+  if (this.is_alive != true) {
+    var do_return = true;
+    this.frame_time += ms;
+    if (this.frame_time > FRAME_TIME_MS) {
+      this.frame_time = 0;
+      this.frame++;
+      if (this.frame >= DEAD_ANIMATION_FRAMES) {
+        this.reinit();
+        game_state.game_state.reinit_room();
+        do_return = false;
+      }
+    }
+    if (do_return) {
+      return;
+    }
+  }
   var dx = this.speed[0] * ms / 1000;
   var dy = this.speed[1] * ms / 1000;
   this._make_sliding_move(dx,dy);
@@ -194,22 +224,36 @@ Player.prototype.update = function(ms) {
     }
   }
   if (killed) {
-    game_state.game_state.reinit_room();
     game_state.game_state.statistics._player_killed++;
     audio_effect.PlaySound(audio_effect.PLAYER_COLLIDED_WITH_ENEMY);
+    this.become_dead();
   }
 }
 
 Player.prototype.draw = function(display) {
-  assert.assert(this.frame < NUM_FRAMES, "invalid animation frame");
-  var dir = this.get_animation_direction();
-  var frame = dir == -1 ?
+  var frame;
+  if (this.is_alive == true) {
+    assert.assert(this.frame < NUM_FRAMES, "invalid animation frame");
+    var dir = this.get_animation_direction();
+    frame = dir == -1 ?
       player_animation[map.MAP_DOWN][0] :
       player_animation[dir][this.frame];
 
-  //window.console.log(this.frame);
+    //window.console.log(this.frame);
+    var mainSurface = gamejs.display.getSurface();
+    mainSurface.blit(frame, this.rect);
+  } else {
+    assert.assert(this.frame < DEAD_ANIMATION_FRAMES, "invalid death animation frame");
+    frame = player_animation[DEAD_ANIMATION][this.frame];
+  }
   var mainSurface = gamejs.display.getSurface();
   mainSurface.blit(frame, this.rect);
+}
+
+Player.prototype.become_dead = function() {
+  this.is_alive = false;
+  this.frame = 0;
+  this.frame_time = 0;
 }
 
 exports.Player = Player;
