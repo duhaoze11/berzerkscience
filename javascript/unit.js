@@ -1,9 +1,11 @@
 var gamejs = require('gamejs');
 var drawing = require('gamejs/draw');
+var utils = require('utils');
 var sprite = require('gamejs/sprite');
 var game_state = require('game_state');
 var assert = require('assert');
 var main = require('main');
+var player = require('player');
 
 function Unit() {
 }
@@ -14,7 +16,6 @@ Unit.prototype._can_be_placed = function(pos_x, pos_y) {
   var m = game_state.game_state.map;
   var room_id = game_state.game_state.current_room_id();
   var r = m.get(room_id);
-
   var rr = new gamejs.Rect(pos_x, pos_y, this.rect.width, this.rect.height);
   for (var i = 0; i < r._walls_to_draw.length; i++) {
     if (rr.collideRect(r._walls_to_draw[i].rect)) {

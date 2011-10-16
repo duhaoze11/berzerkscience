@@ -6,7 +6,6 @@ var game_state = require('game_state');
 var vectors = require('gamejs/utils/vectors');
 var main = require('main');
 var unit = require('unit');
-var astar = require('gamejs/pathfinding/astar');
 var room = require('room');
 
 var ENEMY_WIDTH = exports.ENEMY_WIDTH = 40;
@@ -29,8 +28,12 @@ function Enemy(type, rect) {
   this.rect = rect;
   this._going_to = [this.rect.left, this.rect.top];
   this._speed = 0.02+0.01*type;
-  this.state = Enemy.StateEnum.ALIVE;
   this.fire_rate = 1500;
+  if (type == 4) {
+    this._speed = 0.12;
+    this.fire_rate = 1e8;
+  } 
+  this.state = Enemy.StateEnum.ALIVE;
   this.time_from_last_shot = 0;
 }
 
@@ -67,7 +70,7 @@ Enemy.prototype._select_astar_path = function() {
   for (var d = 0; d < 4; d++) {
     var aa = who[0]+dy[d];
     var bb = who[1]+dx[d];
-    if (aa <= 0 || bb <= 0 || aa >= room.ROOM_HEIGHT-1 || bb >= room.ROOM_WIDTH-1) continue;
+    if (aa < 0 || bb < 0 || aa > room.ROOM_HEIGHT-1 || bb > room.ROOM_WIDTH-1) continue;
     if (r.get(aa,bb) == 1) continue;
     if (r._cell_map[aa][bb] < r._cell_map[who[0]][who[1]]) {
       to = [aa,bb];
@@ -119,6 +122,7 @@ Enemy.prototype.update = function(ms) {
     var len_togo = this._speed * ms;
     var dir_togo = vectors.multiply(vectors.unit(dir), len_togo);
     this._make_sliding_move(dir_togo[0], dir_togo[1]);
+
   }
   if (this.time_from_last_shot > this.fire_rate && game_state.game_state.enemy_projectiles.length < game_state.game_state.ENEMY_PROJECTILES_LIMIT) {
     var shoot_from = [ this.rect.left + this.rect.width*0.5, this.rect.top + this.rect.height*0.5 ];
@@ -132,8 +136,9 @@ Enemy.prototype.update = function(ms) {
   }
 }
 
-Enemy.prototype.become_dead = function() {
-  this.state = Enemy.StateEnum.DEAD;
+Enemy.prototype.center = function() {
+  return [ this.rect.left + this.rect.width * 0.5,
+            this.rect.top + this.rect.height * 0.5];
 }
 
 exports.Enemy = Enemy;

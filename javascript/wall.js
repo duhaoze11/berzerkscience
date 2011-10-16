@@ -1,5 +1,6 @@
 var gamejs = require('gamejs');
 var drawing = require('gamejs/draw');
+var utils = require('utils');
 
 gamejs.preload(['graphics/walls/brick1.png',
                 'graphics/walls/brick2.png',

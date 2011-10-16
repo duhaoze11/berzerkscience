@@ -4,6 +4,7 @@ var unit = require('unit');
 var vectors = require('gamejs/utils/vectors');
 var projectile = require('projectile');
 var game_state = require('game_state');
+var utils = require('utils');
 
 var START_X = 312;
 var START_Y = 312;

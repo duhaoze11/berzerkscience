@@ -6,6 +6,7 @@ var main = require('main');
 var player = require('player');
 var enemy = require('enemy');
 var game_state = require('game_state');
+var utils = require('utils');
 
 var PROJECTILE_WIDTH = 20;
 var PROJECTILE_HEIGHT = 20;
@@ -115,7 +116,7 @@ Projectile.prototype.explode = function(room, kills_robots, kills_player) {
         if (len > this.radius || room.wall_collides_line(center, robot_center)) {
           new_robots.push(robot);
         } else {
-          window.console.log('hit');
+          //window.console.log('hit');
         }
       }
       room._robots = new_robots;

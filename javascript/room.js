@@ -237,26 +237,25 @@ function non_uniform_distribution() {
 }
 
 Room.prototype._generate_robot_position = function() {
-  
   var r = game_state.current_room;
-  for (var tries = 0;tries < 50; tries++) {
-    var px = Math.random() * main.SCREEN_WIDTH;
-    var py = Math.random() * main.SCREEN_HEIGHT;
-    var rect = new gamejs.Rect(px, py, enemy.ENEMY_WIDTH, enemy.ENEMY_HEIGHT);
-    var vx = px + enemy.ENEMY_WIDTH*0.5;
-    var vy = py + enemy.ENEMY_HEIGHT*0.5;
+  for (var tries = 0;; tries++) {
+    var px = WALL_SMALL + Math.random() * (main.SCREEN_WIDTH - 2*WALL_SMALL - enemy.ENEMY_WIDTH);
+    var py = WALL_SMALL + Math.random() * (main.SCREEN_HEIGHT - 2*WALL_SMALL - enemy.ENEMY_HEIGHT);
+    var rct = new gamejs.Rect(px, py, enemy.ENEMY_WIDTH, enemy.ENEMY_HEIGHT);
     var u = new unit.Unit();
-    u.rect = rect;
-    if (!u._can_be_placed(rect.left, rect.top)) {
+    u.rect = new gamejs.Rect(rct);
+    if (!u._can_be_placed(u.rect.left, u.rect.top)) {
       continue;
     }
-    var p = game_state.game_state.player.rect;
+    var vx = px + enemy.ENEMY_WIDTH*0.5;
+    var vy = py + enemy.ENEMY_HEIGHT*0.5;
+    var p = new gamejs.Rect(game_state.game_state.player.rect);
     var cx = p.left + p.width*0.5;
     var cy = p.top + p.height*0.5;
     if (vectors.distance([vx,vy], [cx,cy]) < 250) {
       continue;
     }
-    return rect;
+    return rct;
   }
   return undefined;
 }
@@ -311,24 +310,42 @@ Room.prototype._update_room_map = function() {
     }
   }
   this._cell_map = dist;
-  /**
-    for (var i = 0; i < ROOM_HEIGHT; i++) {
-    s = '';
-    for (var j = 0; j < ROOM_WIDTH; j++) {
-    s += dist[i][j] + ' ';
-    }
-    window.console.log(s);
-    }
-    window.console.log('---------------------------');
-    */
 }
 
 Room.prototype.update = function(ms) {
   this._update_room_map();
   for (var i = 0; i < this._robots.length; i++) {
     var r = this._robots[i];
+    var rz = new gamejs.Rect(r.rect);
     if (r.state == enemy.Enemy.StateEnum.DEAD) continue;
     r.update(ms);
+  }
+  var GRAVITY = 800.0;
+  var eps = 1e-2;
+  var limit = 100;
+  var forces = new Array();
+  for (var i = 0; i < this._robots.length; i++) {
+    var sum = [0,0];
+    for (var j = 0; j < this._robots.length; j++) if (i != j) {
+      var r1 = this._robots[i];
+      var r2 = this._robots[j];
+      var dir = vectors.subtract(r1.center(), r2.center());
+      var d = vectors.len(dir);
+      var zz = false;
+      if (d <= eps) {
+        zz = true;
+        var ang = Math.random() * 3.141592653589879 * 2;
+        dir = [Math.sin(ang), Math.cos(ang)];
+      }
+      if (d < limit) d = limit;
+      dir = vectors.unit(dir);
+      var add_force = vectors.multiply(dir, GRAVITY / (d*d));
+      sum = vectors.add(sum, add_force);
+    }
+    forces[i] = sum;
+  }
+  for (var i = 0; i < this._robots.length; i++) {
+    this._robots[i]._make_sliding_move(forces[i][0], forces[i][1]);
   }
 }
 
