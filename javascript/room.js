@@ -263,7 +263,10 @@ Room.prototype._generate_robot_position = function() {
 Room.prototype.generate_robots = function() {
   this._robots = new Array();
   for (var i = 0; i < this._get_initial_number_of_robots(); i++) {
-    this._robots[i] = new enemy.Enemy(utils.rand_int(enemy.number_of_kinds), this._generate_robot_position());
+    var robot_type;
+    if (this.id() == 0) robot_type = utils.rand_int(3);
+    else robot_type = utils.rand_int(enemy.number_of_kinds);
+    this._robots[i] = new enemy.Enemy(robot_type, this._generate_robot_position());
     if (this._robots[i].rect == undefined) {
       window.console.log('born dead robot');
       this._robots[i].become_dead();
