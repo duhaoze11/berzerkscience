@@ -52,10 +52,22 @@ Map.prototype.generate_items = function(type, num, id) {
     }
     var room = this._rooms_by_id[id];
 
-    // TODO(zvold): make sure books are reachable
-    var x = utils.rand_int(main.SCREEN_WIDTH - item.ITEM_WIDTH);
-    var y = utils.rand_int(main.SCREEN_HEIGHT - item.ITEM_HEIGHT);
-    var new_item = new item.Item(new gamejs.Rect([x, y], [0, 0]), type);
+    var new_item;
+    for (;;){
+      var x = utils.rand_int(main.SCREEN_WIDTH - item.ITEM_WIDTH);
+      var y = utils.rand_int(main.SCREEN_HEIGHT - item.ITEM_HEIGHT);
+      var good = true;
+      var r = new gamejs.Rect(x, y, item.ITEM_WIDTH, item.ITEM_HEIGHT);
+      for (var j = 0; j < room._walls_to_draw.length; j++) {
+        if (r.collideRect(room._walls_to_draw[j].rect)) {
+          good = false;
+          break;
+        }
+      }
+      if (!good) continue;
+      new_item = new item.Item(new gamejs.Rect([x, y], [0, 0]), type);
+      break;
+    }
 
     room.items.push(new_item);
   }
