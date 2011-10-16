@@ -30,7 +30,12 @@ gamejs.ready(function() {
         case gamescreen.GAMESTATE_SCREENS:
           var machine_screen = gamescreen.state_machine[game_state.game_state.machine_screen_id];
           display.clear();
-          machine_screen.draw(display);
+          if (game_state.game_state.machine_screen_id == gamescreen.GAMESTATE_GAMEOVER
+              || game_state.game_state.machine_screen_id == gamescreen.GAMESTATE_GAMEWIN) {
+            machine_screen.draw(display, game_state.game_state.get_stats_as_array());
+          } else {
+            machine_screen.draw(display);
+          }
           gamejs.event.get().forEach(function(event) {
             if (event.type === gamejs.event.MOUSE_DOWN) {
               machine_screen.processUserInput(event);

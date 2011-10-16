@@ -49,9 +49,17 @@ GameState.prototype.Init = function(m, current_room, player) {
   //window.console.log('unicorn in room ' + index);
   this.map.generate_items(item.ITEM_BOOK_FIREBALL, 3, undefined);
   this.map.generate_items(item.ITEM_BOOK_LIGHTNING, 3, undefined);
-  this.map.generate_items(item.ITEM_UNICORN, 1, index);
+  this.map.generate_items(item.ITEM_UNICORN, 1, 0);//index);
 
   this.effects = new Array();
+}
+
+GameState.prototype.get_stats_as_array = function() {
+  return [[10, 'rooms visited:   ' + this.statistics.rooms_visited.length],
+          [17, 'game time:       ' + Math.round(this.statistics._game_time / 1000) + ' seconds'],
+          [11, 'robots killed:   ' + this.statistics._robots_killed],
+          [12, 'deaths:          ' + this.statistics._player_killed],
+          [13, 'books collected: ' + this.statistics._books_picked_up]];
 }
 
 GameState.prototype.changeRoomIfNeeded = function() {

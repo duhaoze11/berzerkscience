@@ -45,7 +45,7 @@ var state_machine = [
       [12, 'yuliya', -1],
       [20, 'DONE', 0]]),
   new GameScreen(undefined, 'initializing',
-     [[10, 'INITIALIZING', -1]])
+      [[10, 'INITIALIZING', -1]])
   ];
 
 function GameScreen(image_file, name, transitions) {
@@ -56,7 +56,7 @@ function GameScreen(image_file, name, transitions) {
 }
 
 GameScreen.prototype.generate_surface = function(add_text) {
-  if (this.surface != undefined) {
+  if (this.surface != undefined && add_text == undefined) {
     return;
   }
   this.surface = new gamejs.Surface(new gamejs.Rect([0, 0], [main.SCREEN_WIDTH, main.SCREEN_HEIGHT]));
@@ -67,11 +67,20 @@ GameScreen.prototype.generate_surface = function(add_text) {
     var surf = font.global_font.generate_surface(text);
     this.surface.blit(surf, [(main.SCREEN_WIDTH - surf.rect.width ) / 2, line_num * surf.rect.height]);
   }
+
+  if (add_text != undefined) {
+    for (var j = 0; j < add_text.length; j++) {
+      var line_num = add_text[j][0];
+      var text = add_text[j][1];
+      var surf = font.global_font.generate_surface(text);
+      this.surface.blit(surf, [(main.SCREEN_WIDTH - surf.rect.width ) / 2, line_num * surf.rect.height]);
+    }
+  }
 }
 
-GameScreen.prototype.draw = function(display) {
+GameScreen.prototype.draw = function(display, add_text) {
   var mainSurface = gamejs.display.getSurface();
-  this.generate_surface();
+  this.generate_surface(add_text);
   mainSurface.blit(this.surface);
 }
 
