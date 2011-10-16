@@ -24,6 +24,7 @@ gamejs.ready(function() {
     var done = 0;
 
     function tick(ms) {
+      game_state.game_state.statistics._game_time += ms;
       if (ms > 100) ms = 100;
       gamejs.event.get().forEach(function(event) {
         if (event.type === gamejs.event.KEY_DOWN ||

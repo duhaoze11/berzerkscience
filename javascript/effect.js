@@ -51,7 +51,7 @@ Effect.prototype.update = function(ms) {
 }
 
 Effect.prototype.draw = function(display) {
-  window.console.log('effect draw');
+  //window.console.log('effect draw');
   var mainSurface = gamejs.display.getSurface();
   this.image.setAlpha(this.alpha);
   mainSurface.blit(this.image, this.rect);

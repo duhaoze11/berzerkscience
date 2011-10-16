@@ -25,6 +25,11 @@ GameState.prototype.Init = function(m, current_room, player) {
   this.current_room.calculate_distances_from_start(-1);
   this.current_room.generate_robots();
 
+  this.statistics = new Object();
+  this.statistics.rooms_visited = new Array();
+  this._add_visited_room(this.current_room.id());
+  this.statistics._game_time = 0;
+
   var max = -1;
   var index = 0;
   for (var i = 0; i < map.NUM_ROOMS; i++) {
@@ -59,6 +64,7 @@ GameState.prototype.changeRoomIfNeeded = function() {
 
   audio_effect.PlaySound(audio_effect.SCREEN_CHANGE);
   var room_id = this.map.get_neighbour(this.current_room.id(), exit);
+  this._add_visited_room(room_id);
   assert.assert(room_id != -1, "exit detected incorrectly");
   this.current_room = this.map.get(room_id);
   switch (exit) {
@@ -130,16 +136,16 @@ GameState.prototype.update_player_projectiles = function(ms, display) {
 
 GameState.prototype.update_enemy_projectiles = function(ms, display) {
   var new_projectiles = new Array();
+  var player_killed = false;
   for (var i = 0; i < this.enemy_projectiles.length; i++) {
     var proj = this.enemy_projectiles[i];
     proj.update(ms);
     if (proj.outside()) {
     } else if (proj.collides(this.current_room._walls_to_draw)
                || proj.collides([this.player])) {
-      proj.explode(this.current_room, false, true);
-      if (this.enemy_projectiles.length == 0) {
-        this.enemy_projectiles = new Array();
-        return;
+      var killed = proj.explode(this.current_room, false, true);
+      if (killed == true) {
+        player_killed = true;
       }
     } else {
       new_projectiles.push(proj);
@@ -147,6 +153,11 @@ GameState.prototype.update_enemy_projectiles = function(ms, display) {
     proj.draw(display);
   }
   this.enemy_projectiles = new_projectiles;
+  if (player_killed) {
+    audio_effect.PlaySound(audio_effect.PLAYER_HIT);
+    this._player_killed++;
+    this.reinit_room();
+  }
 }
 
 function get_weapon_name(type) {
@@ -167,8 +178,8 @@ GameState.prototype.render_game_stats = function(display) {
   } else {
     text += ', ' + get_weapon_name(this.player.weapon_type)
       + ' ' + this.player.weapon_level;
-
   }
+  text = 'rooms visited ' + this.statistics.rooms_visited.length;
 /*  var surface_letters = (new gamejs.font.Font('20px Arial')).render(
       'room ' + this.current_room.id()
       + ', weapon: ' + get_weapon_name(this.player.weapon_type)
@@ -197,8 +208,10 @@ GameState.prototype.update_player_powerups = function() {
       removed = i;
       if (cur_item.type == item.ITEM_BOOK_FIREBALL) {
         audio_effect.PlaySound(audio_effect.FIRE_BOOK_PICKED_UP);
+        this.statistics._books_picked_up++;
       } else if (cur_item.type == item.ITEM_BOOK_LIGHTNING) {
         audio_effect.PlaySound(audio_effect.LIGHTNING_BOOK_PICKED_UP);
+        this.statistics._books_picked_up++;
       }
       if (this.player.weapon_type != cur_item.type) {
         this.player.weapon_level = 1;
@@ -235,6 +248,14 @@ GameState.prototype.update_effects = function(ms, display) {
     eff.draw(display);
   }
   this.effects = new_effects;
+}
+
+GameState.prototype._add_visited_room = function(id) {
+  var l = this.statistics.rooms_visited;
+  for (var i = 0; i < l.length; i++) {
+    if (l[i] == id) return;
+  }
+  l[l.length] = id;
 }
 
 exports.game_state = global_game_state;

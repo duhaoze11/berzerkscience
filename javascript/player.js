@@ -71,7 +71,7 @@ function Player() {
   this.frame = 0;
   this.frame_time = 0;
 
-  window.console.log(player_animation[map.MAP_RIGHT]);
+  //window.console.log(player_animation[map.MAP_RIGHT]);
 }
 
 gamejs.utils.objects.extend(Player, unit.Unit);
@@ -200,7 +200,7 @@ Player.prototype.draw = function(display) {
       player_animation[map.MAP_DOWN][0] :
       player_animation[dir][this.frame];
 
-  window.console.log(this.frame);
+  //window.console.log(this.frame);
   var mainSurface = gamejs.display.getSurface();
   mainSurface.blit(frame, this.rect);
 }
