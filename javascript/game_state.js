@@ -31,6 +31,7 @@ GameState.prototype.Init = function(m, current_room, player) {
   this.statistics._game_time = 0;
   this.statistics._robots_killed = 0;
   this.statistics._player_killed = 0;
+  this.statistics._books_picked_up = 0;
 
   var max = -1;
   var index = 0;
