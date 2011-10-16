@@ -29,6 +29,8 @@ function Item(rect, type) {
       break;
     case ITEM_UNICORN:
       this.image = gamejs.image.load("graphics/items/Unicorn.png");
+      // the unicorn is bigger
+      this.rect = new gamejs.Rect([rect.left, rect.top], [80, 60]);
       break;
     default:
       assert.assert(false, "item type unsupported : " + type);
