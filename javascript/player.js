@@ -199,7 +199,6 @@ function endsWith(str1, str2) {
 Player.prototype.check_for_cheats = function(event) {
   this.cheatcode = this.cheatcode.substring(1, this.cheatcode.length);
   this.cheatcode += String.fromCharCode(event.key);
-  window.console.log(this.cheatcode);
   if (endsWith(this.cheatcode, 'FIREBALL3')) {
     game_state.game_state.player.weapon_type = projectile.WEAPON_FIREBALL;
     game_state.game_state.player.weapon_level = 3;

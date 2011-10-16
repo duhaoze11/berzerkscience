@@ -71,6 +71,11 @@ Unit.prototype._make_sliding_move = function(dx, dy) {
     dy = l;
   }
   this.rect.top += dy;
+  // if still can't be placed, retract
+  if (!this._can_be_placed(this.rect.left, this.rect.top)) {
+    this.rect.left -= dx;
+    this.rect.top -= dy;
+  }
 }
 
 exports.Unit = Unit;
