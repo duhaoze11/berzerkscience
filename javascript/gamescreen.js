@@ -12,11 +12,11 @@ var GAMESTATE_PLAYING = 1000;
 var GAMESTATE_SCREENS = 1001;
 var GAMESTATE_INITIALIZING = 6;
 
-//gamejs.preload(['graphics/screens/test.png']);
+gamejs.preload(['graphics/cover/title.png']);
 
 var state_machine = [
   // 0th game state is always the start screen
-  new GameScreen(undefined, 'start screen',
+  new GameScreen('graphics/cover/title.png', 'start screen',
     [[5, 'BERZERK SCIENCE', -1],
      [15, 'START', GAMESTATE_INITIALIZING],
      [17, 'INSTRUCTIONS', 3],
