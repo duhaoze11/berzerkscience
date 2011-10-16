@@ -4,6 +4,7 @@ var map = require('map');
 var player = require('player');
 var game_state = require('game_state');
 var font = require('font');
+var gamescreen = require('gamescreen');
 
 // $gamejs.preload([]);
 
@@ -24,31 +25,38 @@ gamejs.ready(function() {
     var done = 0;
 
     function tick(ms) {
-      game_state.game_state.statistics._game_time += ms;
-      if (ms > 100) ms = 100;
-      gamejs.event.get().forEach(function(event) {
-        if (event.type === gamejs.event.KEY_DOWN ||
-          event.type === gamejs.event.KEY_UP ||
-          event.type === gamejs.event.MOUSE_DOWN) {
-        p.processUserInput(event);
-        }
-        });
-      display.clear();
+      switch (game_state.game_state.machine_state) {
+        case gamescreen.GAMESTATE_SCREENS:
+          gamescreen.state_machine[game_state.game_state.machine_screen_id].draw(display);
+          break;
+        case gamescreen.GAMESTATE_PLAYING:
+          game_state.game_state.statistics._game_time += ms;
+          if (ms > 100) ms = 100;
+          gamejs.event.get().forEach(function(event) {
+          if (event.type === gamejs.event.KEY_DOWN ||
+            event.type === gamejs.event.KEY_UP ||
+            event.type === gamejs.event.MOUSE_DOWN) {
+          p.processUserInput(event);
+          }
+          });
+          display.clear();
 
-      p.update(ms);
-      game_state.game_state.changeRoomIfNeeded();
+          p.update(ms);
+          game_state.game_state.changeRoomIfNeeded();
 
-      game_state.game_state.current_room.update(ms);
-      game_state.game_state.current_room.draw(display);
-      p.draw(display);
+          game_state.game_state.current_room.update(ms);
+          game_state.game_state.current_room.draw(display);
+          p.draw(display);
 
-      game_state.game_state.update_player_projectiles(ms, display);
-      game_state.game_state.update_enemy_projectiles(ms, display);
-      game_state.game_state.update_player_powerups();
+          game_state.game_state.update_player_projectiles(ms, display);
+          game_state.game_state.update_enemy_projectiles(ms, display);
+          game_state.game_state.update_player_powerups();
 
-      game_state.game_state.update_effects(ms, display);
+          game_state.game_state.update_effects(ms, display);
 
-      game_state.game_state.render_game_stats(display);
+          game_state.game_state.render_game_stats(display);
+          break;
+      }
       return;
     };
     gamejs.time.fpsCallback(tick, this, 40);

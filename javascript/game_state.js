@@ -9,6 +9,7 @@ var effect = require('effect');
 var item = require('item');
 var font = require('font');
 var audio_effect = require('audio_effect');
+var gamescreen = require('gamescreen');
 
 function GameState() {
 }
@@ -32,6 +33,9 @@ GameState.prototype.Init = function(m, current_room, player) {
   this.statistics._robots_killed = 0;
   this.statistics._player_killed = 0;
   this.statistics._books_picked_up = 0;
+
+  this.machine_state = gamescreen.GAMESTATE_PLAYING;
+  this.machine_screen_id = 0;
 
   var max = -1;
   var index = 0;
