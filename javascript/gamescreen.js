@@ -24,7 +24,7 @@ var state_machine = [
   // 1th game state is GAMESTATE_GAMEOVER
   new GameScreen(undefined, 'game over screen',
      [[1, 'GAME OVER', -1],
-      [20, 'NEXT', 0]]),
+      [20, 'ONCE MORE', 0]]),
   // 2th game state is GAMESTATE_GAMEWIN
   new GameScreen(undefined, 'game win screen',
      [[1, 'YOU HAVE DONE IT', -1],
