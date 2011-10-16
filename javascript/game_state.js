@@ -55,11 +55,24 @@ GameState.prototype.Init = function(m, current_room, player) {
 }
 
 GameState.prototype.get_stats_as_array = function() {
-  return [[10, 'rooms visited:   ' + this.statistics.rooms_visited.length],
+  var strings = ['rooms visited:',
+      'robots killed:',
+      'deaths:',
+      'books collected:',];
+  var nums = [ this.statistics.rooms_visited.length,
+      this.statistics._robots_killed,
+      this.statistics._player_killed,
+      this.statistics._books_picked_up ];
+  var strs = new Array();
+  for (var i = 0; i < nums.length; i++) {
+    strs[i] = '' + nums[i];
+    for (;strs[i].length + strings[i].length < 18; strs[i] = ' '+strs[i]);
+  }
+  return [[10, strings[0] + strs[0]],
           [17, 'game time:       ' + Math.round(this.statistics._game_time / 1000) + ' seconds'],
-          [11, 'robots killed:   ' + this.statistics._robots_killed],
-          [12, 'deaths:          ' + this.statistics._player_killed],
-          [13, 'books collected: ' + this.statistics._books_picked_up]];
+          [11, strings[1] + strs[1]],
+          [12, strings[2] + strs[2]], 
+          [13, strings[3] + strs[3]]];
 }
 
 GameState.prototype.changeRoomIfNeeded = function() {
