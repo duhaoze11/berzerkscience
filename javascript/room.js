@@ -115,16 +115,16 @@ Room.prototype.draw = function(display) {
     w.draw(mainSurface);
   }
 
+  for (var i = 0; i < this.items.length; i++) {
+    this.items[i].draw(mainSurface);
+  }
+
   for (var i = 0; i < this._robots.length; i++) {
     var r = this._robots[i];
     if (r.state == enemy.Enemy.StateEnum.DEAD) {
       continue;
     }
     r.draw(mainSurface);
-  }
-
-  for (var i = 0; i < this.items.length; i++) {
-    this.items[i].draw(mainSurface);
   }
 }
 

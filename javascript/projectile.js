@@ -6,7 +6,7 @@ var main = require('main');
 var player = require('player');
 var enemy = require('enemy');
 var game_state = require('game_state');
-var utils = require('utils');
+var effect = require('effect');
 
 var PROJECTILE_WIDTH = 20;
 var PROJECTILE_HEIGHT = 20;
@@ -23,14 +23,14 @@ var proj_properties = [[], // no weapon
                           new ProjStats(350, 100)],
                        [   // lightning
                           new ProjStats(0, 0),
-                          new ProjStats(300, 0),
+                          new ProjStats(300, 40),
                           new ProjStats(350, 50),
-                          new ProjStats(0, 200)
+                          new ProjStats(500, 200)
                       ],
                       [   new ProjStats(0,0), // enemy bullet
-                          new ProjStats(150, 50),
-                          new ProjStats(150, 50),
-                          new ProjStats(150, 50),
+                          new ProjStats(250, 50),
+                          new ProjStats(250, 50),
+                          new ProjStats(250, 50),
                       ],
                       ];
 
@@ -41,9 +41,9 @@ var WEAPON_ENEMY_BULLET = 3;
 
 var MAX_WEAPON_LEVEL = 3;
 
-gamejs.preload(['graphics/projectiles/fireball.png']);
-gamejs.preload(['graphics/projectiles/lightning.png']);
-gamejs.preload(['graphics/projectiles/bullet.png']);
+gamejs.preload(['graphics/projectiles/fireball.png',
+                'graphics/projectiles/lightning.png',
+                'graphics/projectiles/bullet.png']);
 
 // rect - rectangle with (left, top) specifying where to put projectile's center
 // speed - direction vector, not necessarily normalized
@@ -51,13 +51,13 @@ function Projectile(rect, speed, type, level) {
   Projectile.superConstructor.apply(this, arguments);
   assert.assert(type != WEAPON_NONE, "invalid weapon type");
   assert.assert(level != 0, "invalid weapon level");
-  
+
   switch (type) {
     case WEAPON_FIREBALL:
       this.image = gamejs.image.load("graphics/projectiles/fireball.png");
       break;
     case WEAPON_LIGHTNING:
-      this.image = gamejs.image.load("graphics/projectiles/fireball.png");
+      this.image = gamejs.image.load("graphics/projectiles/lightning.png");
       break;
     case WEAPON_ENEMY_BULLET:
       this.image = gamejs.image.load("graphics/projectiles/bullet.png");
@@ -65,6 +65,7 @@ function Projectile(rect, speed, type, level) {
     default:
       assert.assert(false, "weapon type unsupported");
   }
+  this.type = type;
   assert.assert(level < proj_properties[type].length, "unknown weapon level");
   var props = proj_properties[type][level];
 
@@ -99,12 +100,29 @@ Projectile.prototype.collides = function(sprites) {
   return false;
 }
 
+function get_effect_type(weapon_type) {
+  switch (weapon_type) {
+    case WEAPON_FIREBALL:
+      return effect.EFFECT_FIREBALL;
+    case WEAPON_LIGHTNING:
+      return effect.EFFECT_LIGHTNING;
+    default:
+      assert.assert(false, "unknown effect type " + weapon_type);
+  }
+}
+
 Projectile.prototype.explode = function(room, kills_robots, kills_player) {
   if (this.radius < 0) {
     this._kill_single();
   } else {
     var new_robots = new Array();
     var center = [this.rect.left + PROJECTILE_WIDTH / 2, this.rect.top + PROJECTILE_HEIGHT / 2];
+
+    if (kills_robots) {
+      // create explosion effect, which grows
+      var explosion_effect = new effect.Effect(new gamejs.Rect(center), get_effect_type(this.type), 1.5 * this.radius, 200);
+      game_state.game_state.effects.push(explosion_effect);
+    }
 
     if (kills_robots) {
       for (var i = 0; i < room._robots.length; i++) {
