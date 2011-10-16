@@ -15,7 +15,6 @@ gamejs.ready(function() {
 
     var m = new map.Map();
     m.generate_map();
-
     var p = new player.Player();
     var room_id = 0;
     game_state.game_state.Init(m, m.get(room_id), p);
