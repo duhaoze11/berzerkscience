@@ -12,6 +12,8 @@ var GAMESTATE_PLAYING = 1000;
 var GAMESTATE_SCREENS = 1001;
 var GAMESTATE_INITIALIZING = 6;
 
+//gamejs.preload(['graphics/screens/test.png']);
+
 var state_machine = [
   // 0th game state is always the start screen
   new GameScreen(undefined, 'start screen',
@@ -60,6 +62,9 @@ GameScreen.prototype.generate_surface = function(add_text) {
     return;
   }
   this.surface = new gamejs.Surface(new gamejs.Rect([0, 0], [main.SCREEN_WIDTH, main.SCREEN_HEIGHT]));
+  if (this.image_file != undefined) {
+    this.surface.blit(gamejs.image.load(this.image_file));
+  }
   for (var i = 0; i < this.transitions.length; i++) {
     var transition = this.transitions[i];
     var line_num = transition[0];
