@@ -195,6 +195,7 @@ Player.prototype.update = function(ms) {
   }
   if (killed) {
     game_state.game_state.reinit_room();
+    game_state.game_state.statistics._player_killed++;
     audio_effect.PlaySound(audio_effect.PLAYER_COLLIDED_WITH_ENEMY);
   }
 }

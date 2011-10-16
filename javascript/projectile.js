@@ -140,7 +140,7 @@ Projectile.prototype.explode = function(room, kills_robots, kills_player) {
         if (len > this.radius || room.wall_collides_line(center, robot_center)) {
           new_robots.push(robot);
         } else {
-          game_state.game_state._robots_killed++;
+          game_state.game_state.statistics._robots_killed++;
           //window.console.log('hit');
         }
       }

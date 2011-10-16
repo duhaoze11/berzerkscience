@@ -29,6 +29,8 @@ GameState.prototype.Init = function(m, current_room, player) {
   this.statistics.rooms_visited = new Array();
   this._add_visited_room(this.current_room.id());
   this.statistics._game_time = 0;
+  this.statistics._robots_killed = 0;
+  this.statistics._player_killed = 0;
 
   var max = -1;
   var index = 0;
@@ -155,7 +157,7 @@ GameState.prototype.update_enemy_projectiles = function(ms, display) {
   this.enemy_projectiles = new_projectiles;
   if (player_killed) {
     audio_effect.PlaySound(audio_effect.PLAYER_HIT);
-    this._player_killed++;
+    this.statistics._player_killed++;
     this.reinit_room();
   }
 }
@@ -179,7 +181,6 @@ GameState.prototype.render_game_stats = function(display) {
     text += ', ' + get_weapon_name(this.player.weapon_type)
       + ' ' + this.player.weapon_level;
   }
-  text = 'rooms visited ' + this.statistics.rooms_visited.length;
 /*  var surface_letters = (new gamejs.font.Font('20px Arial')).render(
       'room ' + this.current_room.id()
       + ', weapon: ' + get_weapon_name(this.player.weapon_type)
