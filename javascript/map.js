@@ -45,7 +45,7 @@ function Map() {
 
 Map.prototype.generate_items = function(type, num, id) {
   var flag = (id == undefined);
-  var has_anything_close_to_start = false;
+  var close_to_start = 0;
   // generate 3 firebooks at random rooms
   for (var i = 0; i < num; i++) {
     if (flag) {
@@ -53,13 +53,13 @@ Map.prototype.generate_items = function(type, num, id) {
     }
     var room = this._rooms_by_id[id];
 
-    if (this._rooms_by_id[id]._distance_from_start <= 1 && (type == item.ITEM_BOOK_FIREBALL || type == item.ITEM_BOOK_LIGHTNING)) {
-      has_anything_close_to_start = true;
+    if (this._rooms_by_id[id]._distance_from_start <= close_to_start && (type == item.ITEM_BOOK_FIREBALL || type == item.ITEM_BOOK_LIGHTNING)) {
+      this.has_anything_close_to_start = true;
     }
 
-    if (type == item.ITEM_BOOK_LIGHTNING && i == num-1 && !has_anything_close_to_start) {
+    if (type == item.ITEM_BOOK_LIGHTNING && i == num-1 && this.has_anything_close_to_start != true) {
       for (var j = this._rooms_by_id.length-1; j>=0; j--) {
-        if (this._rooms_by_id[j]._distance_from_start <= 1) {
+        if (this._rooms_by_id[j]._distance_from_start <= close_to_start) {
           id = j;
           break;
         }

@@ -5,6 +5,7 @@ var vectors = require('gamejs/utils/vectors');
 var projectile = require('projectile');
 var game_state = require('game_state');
 var utils = require('utils');
+var audio_effect = require('audio_effect');
 
 var START_X = 312;
 var START_Y = 312;
@@ -86,6 +87,11 @@ Player.prototype.create_projectile = function(e) {
   var proj = new projectile.Projectile(new gamejs.Rect(player_center), direction, this.weapon_type, this.weapon_level);
   this.num_projectiles++;
   game_state.game_state.add_player_projectile(proj);
+  if (this.weapon_type == projectile.WEAPON_FIREBALL) {
+    audio_effect.PlaySound(audio_effect.FIREBALL_SHOT);
+  } else if (this.weapon_type == projectile.WEAPON_LIGHTNING) {
+    audio_effect.PlaySound(audio_effect.LIGHTNING_SHOT);
+  }
 }
 
 Player.prototype.processUserInput = function(event) {
@@ -115,6 +121,7 @@ Player.prototype.update = function(ms) {
   }
   if (killed) {
     game_state.game_state.reinit_room();
+    audio_effect.PlaySound(audio_effect.PLAYER_COLLIDED_WITH_ENEMY);
   }
 }
 
