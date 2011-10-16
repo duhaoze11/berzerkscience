@@ -79,12 +79,12 @@ function Player() {
   preload_animation();
   this.image = gamejs.image.load("graphics/wizard/front_an1.png");
   this.rect = new gamejs.Rect([START_X - PLAYER_WIDTH / 2, START_Y - PLAYER_HEIGHT / 2],
-                              [PLAYER_WIDTH, PLAYER_HEIGHT]);
+      [PLAYER_WIDTH, PLAYER_HEIGHT]);
+  this.weapon_type = projectile.WEAPON_NONE;
+  this.weapon_level = 0;
   this.reinit = function() {
     this.speed = [0, 0];
     this.num_projectiles = 0;
-    this.weapon_type = projectile.WEAPON_NONE;
-    this.weapon_level = 0;
     this.frame = 0;
     this.frame_time = 0;
     this.is_alive = true;
