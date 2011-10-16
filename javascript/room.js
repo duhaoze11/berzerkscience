@@ -140,7 +140,8 @@ Room.prototype._build_walls_rects = function() {
         var width = get_width(i);
         var up = get_edge(j);
         var height = get_width(j);
-        this._walls_to_draw[walls_cnt] = new wall.Wall(get_type(j, i), new gamejs.Rect(up,left,height,width));
+        if (this.wall_type == undefined) this.wall_type = 0;
+        this._walls_to_draw[walls_cnt] = new wall.Wall(get_type(j, i) + this.wall_type * 4, new gamejs.Rect(up,left,height,width));
         walls_cnt++;
       }
     }

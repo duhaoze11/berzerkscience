@@ -24,6 +24,22 @@ GameState.prototype.Init = function(m, current_room, player) {
   this.enemy_projectiles = new Array();
   this.ENEMY_PROJECTILES_LIMIT = 10;
   this.current_room.calculate_distances_from_start(-1);
+  var mx = -1;
+  for (var i = 0; i < this.map._rooms_by_id.length; i++) {
+    var z = this.map._rooms_by_id[i]._distance_from_start;
+    if (z > mx) mx = z;
+  }
+  for (var i = 0; i < this.map._rooms_by_id.length; i++) {
+    var z = this.map._rooms_by_id[i]._distance_from_start;
+    var probability = z / mx;
+    var p = Math.random();
+    if (p < probability) {
+      this.map._rooms_by_id[i].wall_type = 1;
+    } else {
+      this.map._rooms_by_id[i].wall_type = 0;
+    }
+    this.map._rooms_by_id[i]._build_walls_rects();
+  }
   this.current_room.generate_robots();
 
   this.statistics = new Object();
