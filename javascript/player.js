@@ -9,6 +9,7 @@ var projectile = require('projectile');
 var unit = require('unit');
 var utils = require('utils');
 var gamescreen = require('gamescreen');
+var item = require('item');
 
 var START_X = 312;
 var START_Y = 312;
@@ -205,6 +206,8 @@ Player.prototype.check_for_cheats = function(event) {
   } else if (endsWith(this.cheatcode, 'LIGHT3')) {
     game_state.game_state.player.weapon_type = projectile.WEAPON_LIGHTNING;
     game_state.game_state.player.weapon_level = 3;
+  } else if (endsWith(this.cheatcode, 'UNICORN')) {
+    game_state.game_state.map.generate_items(item.ITEM_UNICORN, 1, game_state.game_state.current_room.id() + 1);
   }
 }
 
