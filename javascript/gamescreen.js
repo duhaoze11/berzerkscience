@@ -4,6 +4,7 @@ var sprite = require('gamejs/sprite');
 var assert = require('assert');
 var font = require('font');
 var main = require('main');
+var game_state = require('game_state');
 
 var GAMESTATE_GAMEOVER = 1;
 var GAMESTATE_GAMEWIN = 2;
@@ -69,6 +70,30 @@ GameScreen.prototype.draw = function(display) {
   var mainSurface = gamejs.display.getSurface();
   this.generate_surface();
   mainSurface.blit(this.surface);
+}
+
+GameScreen.prototype.processUserInput = function(event) {
+  switch (event.type) {
+    case gamejs.event.MOUSE_DOWN:
+      for (var i = 0; i < this.transitions.length; i++) {
+        var transition = this.transitions[i];
+        if (transition[3] == -1) {
+          continue;
+        }
+        var y_coord = transition[0] * font.LETTER_HEIGHT;
+        if (event.pos[1] > y_coord && event.pos[1] < y_coord + font.LETTER_HEIGHT) {
+          var next_state = transition[2];
+          if (next_state == GAMESTATE_PLAYING) {
+            game_state.game_state.machine_state = GAMESTATE_PLAYING;
+          } else {
+            game_state.game_state.machine_state = GAMESTATE_SCREENS;
+            window.console.log('next state: ' + next_state);
+            game_state.game_state.machine_screen_id = next_state;
+          }
+        }
+      }
+      break;
+  }
 }
 
 exports.GameScreen = GameScreen;

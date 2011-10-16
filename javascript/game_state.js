@@ -34,7 +34,7 @@ GameState.prototype.Init = function(m, current_room, player) {
   this.statistics._player_killed = 0;
   this.statistics._books_picked_up = 0;
 
-  this.machine_state = gamescreen.GAMESTATE_PLAYING;
+  this.machine_state = gamescreen.GAMESTATE_SCREENS;
   this.machine_screen_id = 0;
 
   var max = -1;

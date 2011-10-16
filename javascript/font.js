@@ -36,3 +36,5 @@ Font.prototype.generate_surface = function(text) {
 }
 
 exports.global_font = global_font;
+exports.LETTER_HEIGHT = LETTER_HEIGHT;
+exports.LETTER_WIDTH = LETTER_WIDTH;

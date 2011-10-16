@@ -27,17 +27,24 @@ gamejs.ready(function() {
     function tick(ms) {
       switch (game_state.game_state.machine_state) {
         case gamescreen.GAMESTATE_SCREENS:
-          gamescreen.state_machine[game_state.game_state.machine_screen_id].draw(display);
+          var machine_screen = gamescreen.state_machine[game_state.game_state.machine_screen_id];
+          display.clear();
+          machine_screen.draw(display);
+          gamejs.event.get().forEach(function(event) {
+            if (event.type === gamejs.event.MOUSE_DOWN) {
+              machine_screen.processUserInput(event);
+            }
+          });
           break;
         case gamescreen.GAMESTATE_PLAYING:
           game_state.game_state.statistics._game_time += ms;
           if (ms > 100) ms = 100;
           gamejs.event.get().forEach(function(event) {
-          if (event.type === gamejs.event.KEY_DOWN ||
-            event.type === gamejs.event.KEY_UP ||
-            event.type === gamejs.event.MOUSE_DOWN) {
-          p.processUserInput(event);
-          }
+            if (event.type === gamejs.event.KEY_DOWN ||
+                event.type === gamejs.event.KEY_UP ||
+                event.type === gamejs.event.MOUSE_DOWN) {
+              p.processUserInput(event);
+            }
           });
           display.clear();
 
