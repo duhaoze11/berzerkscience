@@ -1,11 +1,13 @@
 var gamejs = require('gamejs');
 var drawing = require('gamejs/draw');
-var unit = require('unit');
 var vectors = require('gamejs/utils/vectors');
-var projectile = require('projectile');
-var game_state = require('game_state');
-var utils = require('utils');
+var assert = require('assert');
 var audio_effect = require('audio_effect');
+var game_state = require('game_state');
+var map = require('map');
+var projectile = require('projectile');
+var unit = require('unit');
+var utils = require('utils');
 
 var START_X = 312;
 var START_Y = 312;
@@ -18,10 +20,47 @@ var MAX_PROJECTILES = 5; // maximum number of allowed projectiles
 
 gamejs.preload(['graphics/wizard/left.png',
                 'graphics/wizard/down.png',
-                'graphics/wizard/front_an1.png']);
+                'graphics/wizard/front_an1.png',
+                'graphics/wizard/front_an2.png',
+                'graphics/wizard/front_an3.png',
+               ]);
+
+var NUM_FRAMES = 4;
+var FRAME_TIME_MS = 300;
+
+var player_animation = new Array();
+// init all player's animation sprites
+function preload_animation() {
+  player_animation[map.MAP_RIGHT] = [
+    gamejs.image.load('graphics/wizard/left.png'),
+    gamejs.image.load('graphics/wizard/down.png'),
+    gamejs.image.load('graphics/wizard/front_an1.png'),
+    gamejs.image.load('graphics/wizard/front_an1.png'),
+  ];
+  player_animation[map.MAP_LEFT] = [
+    gamejs.image.load('graphics/wizard/left.png'),
+    gamejs.image.load('graphics/wizard/down.png'),
+    gamejs.image.load('graphics/wizard/front_an1.png'),
+    gamejs.image.load('graphics/wizard/front_an1.png'),
+  ]; 
+  player_animation[map.MAP_UP] = [
+    gamejs.image.load('graphics/wizard/left.png'),
+    gamejs.image.load('graphics/wizard/down.png'),
+    gamejs.image.load('graphics/wizard/front_an1.png'),
+    gamejs.image.load('graphics/wizard/front_an1.png'),
+  ]; 
+  player_animation[map.MAP_DOWN] = [
+    gamejs.image.load('graphics/wizard/front_an1.png'),
+    gamejs.image.load('graphics/wizard/front_an2.png'),
+    gamejs.image.load('graphics/wizard/front_an3.png'),
+    gamejs.image.load('graphics/wizard/front_an2.png'),
+  ];
+}
 
 function Player() {
   Player.superConstructor.apply(this, arguments);
+
+  preload_animation();
   this.image = gamejs.image.load("graphics/wizard/front_an1.png");
   this.rect = new gamejs.Rect([START_X - PLAYER_WIDTH / 2, START_Y - PLAYER_HEIGHT / 2],
                               [PLAYER_WIDTH, PLAYER_HEIGHT]);
@@ -29,9 +68,27 @@ function Player() {
   this.num_projectiles = 0;
   this.weapon_type = projectile.WEAPON_NONE;
   this.weapon_level = 0;
+  this.frame = 0;
+  this.frame_time = 0;
+
+  window.console.log(player_animation[map.MAP_RIGHT]);
 }
 
 gamejs.utils.objects.extend(Player, unit.Unit);
+
+Player.prototype.get_animation_direction = function() {
+  if (this.speed[0] == 0 && this.speed[1] == 0) {
+    return -1;
+  }
+  if (this.speed[0] > 0) {
+    return map.MAP_RIGHT;
+  } else if (this.speed[0] < 0) {
+    return map.MAP_LEFT;
+  } else if (this.speed[1] < 0) {
+    return map.MAP_UP;
+  }
+  return map.MAP_DOWN;
+}
 
 Player.prototype.speed_up = function(e) {
   switch (e.key) {
@@ -112,6 +169,17 @@ Player.prototype.update = function(ms) {
   var dx = this.speed[0] * ms / 1000;
   var dy = this.speed[1] * ms / 1000;
   this._make_sliding_move(dx,dy);
+
+  if (this.get_animation_direction() != -1) {
+    this.frame_time += ms;
+    if (this.frame_time > FRAME_TIME_MS) {
+      this.frame_time = 0;
+      this.frame++;
+      if (this.frame >= NUM_FRAMES) {
+        this.frame = 0;
+      }
+    }
+  }
   var killed = false;
   for (var i = 0; i < game_state.game_state.current_room._robots.length; i++) {
     var z = game_state.game_state.current_room._robots[i].rect;
@@ -123,6 +191,18 @@ Player.prototype.update = function(ms) {
     game_state.game_state.reinit_room();
     audio_effect.PlaySound(audio_effect.PLAYER_COLLIDED_WITH_ENEMY);
   }
+}
+
+Player.prototype.draw = function(display) {
+  assert.assert(this.frame < NUM_FRAMES, "invalid animation frame");
+  var dir = this.get_animation_direction();
+  var frame = dir == -1 ?
+      player_animation[map.MAP_DOWN][0] :
+      player_animation[dir][this.frame];
+
+  window.console.log(this.frame);
+  var mainSurface = gamejs.display.getSurface();
+  mainSurface.blit(frame, this.rect);
 }
 
 exports.Player = Player;
