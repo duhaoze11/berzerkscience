@@ -141,6 +141,8 @@ Projectile.prototype.explode = function(room, kills_robots, kills_player) {
           new_robots.push(robot);
         } else {
           game_state.game_state.statistics._robots_killed++;
+          var death_effect = new effect.Effect(new gamejs.Rect(robot.rect), robot._type + effect.EFFECT_BASE_DEAD_ROBOT, robot.rect.width, 400);
+          game_state.game_state.effects.push(death_effect);
           //window.console.log('hit');
         }
       }

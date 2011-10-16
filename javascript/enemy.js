@@ -14,11 +14,11 @@ var ENEMY_WIDTH = exports.ENEMY_WIDTH = 40;
 var ENEMY_HEIGHT = exports.ENEMY_HEIGHT = 40;
 
 var orange_robot_image = 'graphics/robots/orange.png';
-var red_robot_image = 'graphics/robots/red.png';
 var yellow_robot_image = 'graphics/robots/yellow.png';
+var red_robot_image = 'graphics/robots/red.png';
 var tractor1_robot_image = 'graphics/robots/tractor1.png';
 var tractor2_robot_image = 'graphics/robots/tractor2.png';
-var robot_images = [ orange_robot_image, red_robot_image, yellow_robot_image, tractor1_robot_image, tractor2_robot_image ];
+var robot_images = [ orange_robot_image, yellow_robot_image, red_robot_image, tractor1_robot_image, tractor2_robot_image ];
 
 gamejs.preload(robot_images);
 
