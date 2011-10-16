@@ -8,6 +8,7 @@ var projectile = require('projectile');
 var effect = require('effect');
 var item = require('item');
 var font = require('font');
+var audio_effect = require('audio_effect');
 
 function GameState() {
 }
@@ -56,6 +57,7 @@ GameState.prototype.changeRoomIfNeeded = function() {
     return;
   }
 
+  audio_effect.PlaySound(audio_effect.SCREEN_CHANGE);
   var room_id = this.map.get_neighbour(this.current_room.id(), exit);
   assert.assert(room_id != -1, "exit detected incorrectly");
   this.current_room = this.map.get(room_id);
@@ -193,6 +195,11 @@ GameState.prototype.update_player_powerups = function() {
     }
     if (cur_item.rect.collideRect(this.player.rect)) {
       removed = i;
+      if (cur_item.type == item.ITEM_BOOK_FIREBALL) {
+        audio_effect.PlaySound(audio_effect.FIRE_BOOK_PICKED_UP);
+      } else if (cur_item.type == item.ITEM_BOOK_LIGHTNING) {
+        audio_effect.PlaySound(audio_effect.LIGHTNING_BOOK_PICKED_UP);
+      }
       if (this.player.weapon_type != cur_item.type) {
         this.player.weapon_level = 1;
       } else {

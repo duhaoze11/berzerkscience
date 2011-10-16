@@ -7,6 +7,7 @@ var player = require('player');
 var enemy = require('enemy');
 var game_state = require('game_state');
 var effect = require('effect');
+var audio_effect = require('audio_effect');
 
 var PROJECTILE_WIDTH = 20;
 var PROJECTILE_HEIGHT = 20;
@@ -115,6 +116,11 @@ Projectile.prototype.explode = function(room, kills_robots, kills_player) {
   if (this.radius < 0) {
     this._kill_single();
   } else {
+    if (this.type == WEAPON_FIREBALL) {
+      audio_effect.PlaySound(audio_effect.FIREBALL_EXPLODE);
+    } else if (this.type == WEAPON_LIGHTNING) {
+      audio_effect.PlaySound(audio_effect.LIGHTNING_EXPLODE);
+    }
     var new_robots = new Array();
     var center = [this.rect.left + PROJECTILE_WIDTH / 2, this.rect.top + PROJECTILE_HEIGHT / 2];
 
@@ -150,6 +156,7 @@ Projectile.prototype.explode = function(room, kills_robots, kills_player) {
 
       } else {
         game_state.game_state.reinit_room();
+        audio_effect.PlaySound(audio_effect.PLAYER_HIT);
       }
     }
   }

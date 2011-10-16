@@ -8,6 +8,7 @@ var main = require('main');
 var unit = require('unit');
 var room = require('room');
 var utils = require('utils');
+var audio_effect = require('audio_effect');
 
 var ENEMY_WIDTH = exports.ENEMY_WIDTH = 40;
 var ENEMY_HEIGHT = exports.ENEMY_HEIGHT = 40;
@@ -133,6 +134,7 @@ Enemy.prototype.update = function(ms) {
       var proj = new projectile.Projectile(new gamejs.Rect(shoot_from[0], shoot_from[1]), vectors.subtract(shoot_to, shoot_from), projectile.WEAPON_ENEMY_BULLET, 1);
       this.time_from_last_shot = 0;
       game_state.game_state.add_enemy_projectile(proj);
+      audio_effect.PlaySound(audio_effect.ENEMY_SHOT);
     }
   }
 }
