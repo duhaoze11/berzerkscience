@@ -20,6 +20,12 @@ var MAX_PROJECTILES = 5; // maximum number of allowed projectiles
 
 gamejs.preload(['graphics/wizard/left.png',
                 'graphics/wizard/down.png',
+                'graphics/wizard/side_an1.png',
+                'graphics/wizard/side_an2.png',
+                'graphics/wizard/side_an3.png',
+                'graphics/wizard/back_an1.png',
+                'graphics/wizard/back_an2.png',
+                'graphics/wizard/back_an3.png',
                 'graphics/wizard/front_an1.png',
                 'graphics/wizard/front_an2.png',
                 'graphics/wizard/front_an3.png',
@@ -32,22 +38,22 @@ var player_animation = new Array();
 // init all player's animation sprites
 function preload_animation() {
   player_animation[map.MAP_RIGHT] = [
-    gamejs.image.load('graphics/wizard/left.png'),
-    gamejs.image.load('graphics/wizard/down.png'),
-    gamejs.image.load('graphics/wizard/front_an1.png'),
-    gamejs.image.load('graphics/wizard/front_an1.png'),
+    gamejs.transform.flip(gamejs.image.load('graphics/wizard/side_an1.png'), true, false),
+    gamejs.transform.flip(gamejs.image.load('graphics/wizard/side_an2.png'), true, false),
+    gamejs.transform.flip(gamejs.image.load('graphics/wizard/side_an3.png'), true, false),
+    gamejs.transform.flip(gamejs.image.load('graphics/wizard/side_an2.png'), true, false),
   ];
   player_animation[map.MAP_LEFT] = [
-    gamejs.image.load('graphics/wizard/left.png'),
-    gamejs.image.load('graphics/wizard/down.png'),
-    gamejs.image.load('graphics/wizard/front_an1.png'),
-    gamejs.image.load('graphics/wizard/front_an1.png'),
+    gamejs.image.load('graphics/wizard/side_an1.png'),
+    gamejs.image.load('graphics/wizard/side_an2.png'),
+    gamejs.image.load('graphics/wizard/side_an3.png'),
+    gamejs.image.load('graphics/wizard/side_an2.png'),
   ]; 
   player_animation[map.MAP_UP] = [
-    gamejs.image.load('graphics/wizard/left.png'),
-    gamejs.image.load('graphics/wizard/down.png'),
-    gamejs.image.load('graphics/wizard/front_an1.png'),
-    gamejs.image.load('graphics/wizard/front_an1.png'),
+    gamejs.image.load('graphics/wizard/back_an1.png'),
+    gamejs.image.load('graphics/wizard/back_an2.png'),
+    gamejs.image.load('graphics/wizard/back_an3.png'),
+    gamejs.image.load('graphics/wizard/back_an2.png'),
   ]; 
   player_animation[map.MAP_DOWN] = [
     gamejs.image.load('graphics/wizard/front_an1.png'),
