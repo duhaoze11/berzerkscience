@@ -219,7 +219,8 @@ function get_weapon_name(type) {
 }
 
 GameState.prototype.render_game_stats = function(display) {
-  var text = 'room ' + this.current_room.id();
+  var text = 'room ' + this.current_room.id() +
+             '  lives ' + this.player.lives;
   if (this.player.weapon_type == projectile.WEAPON_NONE) {
     text += ', no weapon';
   } else {

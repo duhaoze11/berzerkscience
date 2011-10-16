@@ -8,6 +8,7 @@ var map = require('map');
 var projectile = require('projectile');
 var unit = require('unit');
 var utils = require('utils');
+var gamescreen = require('gamescreen');
 
 var START_X = 312;
 var START_Y = 312;
@@ -38,6 +39,7 @@ var NUM_FRAMES = 4;
 var FRAME_TIME_MS = 300;
 var DEAD_ANIMATION = 4;
 var DEAD_ANIMATION_FRAMES = 3;
+var PLAYER_LIVES = 10;
 
 var player_animation = new Array();
 // init all player's animation sprites
@@ -82,6 +84,7 @@ function Player() {
       [PLAYER_WIDTH, PLAYER_HEIGHT]);
   this.weapon_type = projectile.WEAPON_NONE;
   this.weapon_level = 0;
+  this.lives = PLAYER_LIVES;
   this.reinit = function() {
     this.speed = [0, 0];
     this.num_projectiles = 0;
@@ -193,6 +196,10 @@ Player.prototype.update = function(ms) {
       this.frame_time = 0;
       this.frame++;
       if (this.frame >= DEAD_ANIMATION_FRAMES) {
+        if (this.lives == 0) {
+          game_state.game_state.machine_state = gamescreen.GAMESTATE_SCREENS;
+          game_state.game_state.machine_screen_id = gamescreen.GAMESTATE_GAMEOVER;
+        }
         this.reinit();
         game_state.game_state.reinit_room();
         do_return = false;
@@ -254,6 +261,7 @@ Player.prototype.become_dead = function() {
   this.is_alive = false;
   this.frame = 0;
   this.frame_time = 0;
+  this.lives--;
 }
 
 exports.Player = Player;
