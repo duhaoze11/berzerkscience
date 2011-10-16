@@ -19,12 +19,12 @@ function ProjStats(speed, radius) {
 
 var proj_properties = [[], // no weapon
                        [  new ProjStats(0, 0), // fireball
-                          new ProjStats(200, 40),
+                          new ProjStats(200, 45),
                           new ProjStats(300, 60),
                           new ProjStats(350, 100)],
                        [   // lightning
                           new ProjStats(0, 0),
-                          new ProjStats(300, 40),
+                          new ProjStats(300, 45),
                           new ProjStats(350, 50),
                           new ProjStats(500, 200)
                       ],
