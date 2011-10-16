@@ -33,6 +33,8 @@ GameState.prototype.Init = function(m, current_room, player) {
     }
   }
   //window.console.log('unicorn in room ' + index);
+  this.map.generate_items(item.ITEM_BOOK_FIREBALL, 3, undefined);
+  this.map.generate_items(item.ITEM_BOOK_LIGHTNING, 3, undefined);
   this.map.generate_items(item.ITEM_UNICORN, 1, index);
 
   this.effects = new Array();

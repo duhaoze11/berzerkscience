@@ -45,12 +45,27 @@ function Map() {
 
 Map.prototype.generate_items = function(type, num, id) {
   var flag = (id == undefined);
+  var has_anything_close_to_start = false;
   // generate 3 firebooks at random rooms
   for (var i = 0; i < num; i++) {
     if (flag) {
       id = utils.rand_int(NUM_ROOMS);
     }
     var room = this._rooms_by_id[id];
+
+    if (this._rooms_by_id[id]._distance_from_start <= 1 && (type == item.ITEM_BOOK_FIREBALL || type == item.ITEM_BOOK_LIGHTNING)) {
+      has_anything_close_to_start = true;
+    }
+
+    if (type == item.ITEM_BOOK_LIGHTNING && i == num-1 && !has_anything_close_to_start) {
+      for (var j = this._rooms_by_id.length-1; j>=0; j--) {
+        if (this._rooms_by_id[j]._distance_from_start <= 1) {
+          id = j;
+          break;
+        }
+      }
+      room = this._rooms_by_id[id];
+    }
 
     var new_item;
     for (;;){
@@ -64,7 +79,7 @@ Map.prototype.generate_items = function(type, num, id) {
           break;
         }
       }
-      if (!good) continue;
+       if (!good) continue;
       new_item = new item.Item(new gamejs.Rect([x, y], [0, 0]), type);
       break;
     }
@@ -155,8 +170,6 @@ Map.prototype.generate_map = function() {
       this._room_map[i][j].generate_walls(hole_position[ay-1][ax],hole_position[ay][ax+1],hole_position[ay+1][ax],hole_position[ay][ax-1]);
     }
   }
-  this.generate_items(item.ITEM_BOOK_FIREBALL, 3, undefined);
-  this.generate_items(item.ITEM_BOOK_LIGHTNING, 3, undefined);
 }
 
 exports.Map = Map;
