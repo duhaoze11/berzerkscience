@@ -104,7 +104,6 @@ GameScreen.prototype.processUserInput = function(event) {
             game_state.game_state.machine_state = GAMESTATE_INITIALIZING;
           } else {
             game_state.game_state.machine_state = GAMESTATE_SCREENS;
-            window.console.log('next state: ' + next_state);
             game_state.game_state.machine_screen_id = next_state;
           }
         }
