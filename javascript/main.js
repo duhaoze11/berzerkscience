@@ -3,6 +3,7 @@ var room = require('room');
 var map = require('map');
 var player = require('player');
 var game_state = require('game_state');
+var font = require('font');
 
 // $gamejs.preload([]);
 
@@ -18,6 +19,7 @@ gamejs.ready(function() {
     var p = new player.Player();
     var room_id = 0;
     game_state.game_state.Init(m, m.get(room_id), p);
+    font.global_font.Init();
 
     var done = 0;
 

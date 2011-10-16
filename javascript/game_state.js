@@ -7,6 +7,7 @@ var gamejs = require('gamejs');
 var projectile = require('projectile');
 var effect = require('effect');
 var item = require('item');
+var font = require('font');
 
 function GameState() {
 }
@@ -158,13 +159,24 @@ function get_weapon_name(type) {
 }
 
 GameState.prototype.render_game_stats = function(display) {
-  var surface_letters = (new gamejs.font.Font('20px Arial')).render(
+  var text = 'room ' + this.current_room.id();
+  if (this.player.weapon_type == projectile.WEAPON_NONE) {
+    text += ', no weapon';
+  } else {
+    text += ', ' + get_weapon_name(this.player.weapon_type)
+      + ' ' + this.player.weapon_level;
+
+  }
+/*  var surface_letters = (new gamejs.font.Font('20px Arial')).render(
       'room ' + this.current_room.id()
       + ', weapon: ' + get_weapon_name(this.player.weapon_type)
       + ' ' + this.player.weapon_level);
   var surface = new gamejs.Surface(surface_letters.rect);
   surface.fill('#ffffff');
   surface.blit(surface_letters);
+*/
+  var surface = font.global_font.generate_surface(text);
+
   surface.setAlpha(0.4);
   display.blit(surface, [(main.SCREEN_WIDTH - surface.rect.width) / 2, 0]);
 }
