@@ -161,9 +161,12 @@ GameState.prototype.update_enemy_projectiles = function(ms, display) {
   }
   this.enemy_projectiles = new_projectiles;
   if (player_killed) {
+    if (this.player.is_alive != true)  {
+      return;
+    }
     audio_effect.PlaySound(audio_effect.PLAYER_HIT);
     this.statistics._player_killed++;
-    this.reinit_room();
+    this.player.become_dead();
   }
 }
 
