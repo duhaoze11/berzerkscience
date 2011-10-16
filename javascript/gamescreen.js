@@ -55,7 +55,7 @@ function GameScreen(image_file, name, transitions) {
   this.surface = undefined;
 }
 
-GameScreen.prototype.generate_surface = function() {
+GameScreen.prototype.generate_surface = function(add_text) {
   if (this.surface != undefined) {
     return;
   }

@@ -64,11 +64,11 @@ gamejs.ready(function() {
           game_state.game_state.current_room.draw(display);
           p.draw(display);
 
+          game_state.game_state.update_effects(ms, display);
+
           game_state.game_state.update_player_projectiles(ms, display);
           game_state.game_state.update_enemy_projectiles(ms, display);
           game_state.game_state.update_player_powerups();
-
-          game_state.game_state.update_effects(ms, display);
 
           game_state.game_state.render_game_stats(display);
           break;
