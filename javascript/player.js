@@ -85,6 +85,7 @@ function Player() {
   this.weapon_type = projectile.WEAPON_NONE;
   this.weapon_level = 0;
   this.lives = PLAYER_LIVES;
+  this.cheatcode = 'nothingishere';
   this.reinit = function() {
     this.speed = [0, 0];
     this.num_projectiles = 0;
@@ -178,6 +179,7 @@ Player.prototype.processUserInput = function(event) {
   switch (event.type) {
     case gamejs.event.KEY_DOWN:
       this.speed_up(event);
+      this.check_for_cheats(event);
       break;
     case gamejs.event.KEY_UP:
       this.slow_down(event);
@@ -185,6 +187,24 @@ Player.prototype.processUserInput = function(event) {
     case gamejs.event.MOUSE_DOWN:
       this.create_projectile(event);
       break;
+  }
+}
+
+function endsWith(str1, str2) {
+  var tmp = str1.substring(str1.length - str2.length, str1.length);
+  return (tmp == str2);
+}
+
+Player.prototype.check_for_cheats = function(event) {
+  this.cheatcode = this.cheatcode.substring(1, this.cheatcode.length);
+  this.cheatcode += String.fromCharCode(event.key);
+  window.console.log(this.cheatcode);
+  if (endsWith(this.cheatcode, 'FIREBALL3')) {
+    game_state.game_state.player.weapon_type = projectile.WEAPON_FIREBALL;
+    game_state.game_state.player.weapon_level = 3;
+  } else if (endsWith(this.cheatcode, 'LIGHT3')) {
+    game_state.game_state.player.weapon_type = projectile.WEAPON_LIGHTNING;
+    game_state.game_state.player.weapon_level = 3;
   }
 }
 
