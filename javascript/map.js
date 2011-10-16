@@ -12,8 +12,8 @@ var MAP_RIGHT = 1;
 var MAP_DOWN = 2;
 var MAP_LEFT = 3;
 
-var MAP_HEIGHT = 3;
-var MAP_WIDTH = 3;
+var MAP_HEIGHT = 10;
+var MAP_WIDTH = 10;
 var NUM_ROOMS = MAP_HEIGHT * MAP_WIDTH;
 
 function Map() {
