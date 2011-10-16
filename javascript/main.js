@@ -23,6 +23,7 @@ gamejs.ready(function() {
     var done = 0;
 
     function tick(ms) {
+      if (ms > 100) ms = 100;
       gamejs.event.get().forEach(function(event) {
         if (event.type === gamejs.event.KEY_DOWN ||
           event.type === gamejs.event.KEY_UP ||

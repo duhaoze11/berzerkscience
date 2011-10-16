@@ -7,6 +7,7 @@ var vectors = require('gamejs/utils/vectors');
 var main = require('main');
 var unit = require('unit');
 var room = require('room');
+var utils = require('utils');
 
 var ENEMY_WIDTH = exports.ENEMY_WIDTH = 40;
 var ENEMY_HEIGHT = exports.ENEMY_HEIGHT = 40;
@@ -34,7 +35,7 @@ function Enemy(type, rect) {
     this.fire_rate = 1e8;
   } 
   this.state = Enemy.StateEnum.ALIVE;
-  this.time_from_last_shot = 0;
+  this.time_from_last_shot = utils.rand_int(500)-200;
 }
 
 gamejs.utils.objects.extend(Enemy, unit.Unit);
