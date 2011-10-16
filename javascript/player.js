@@ -24,7 +24,7 @@ gamejs.preload(['graphics/wizard/left.png',
                 'graphics/wizard/front_an3.png',
                ]);
 
-var NUM_FRAMES = 3;
+var NUM_FRAMES = 4;
 var FRAME_TIME_MS = 300;
 
 var player_animation = new Array();
@@ -34,21 +34,25 @@ function preload_animation() {
     gamejs.image.load('graphics/wizard/left.png'),
     gamejs.image.load('graphics/wizard/down.png'),
     gamejs.image.load('graphics/wizard/front_an1.png'),
+    gamejs.image.load('graphics/wizard/front_an1.png'),
   ];
   player_animation[map.MAP_LEFT] = [
     gamejs.image.load('graphics/wizard/left.png'),
     gamejs.image.load('graphics/wizard/down.png'),
+    gamejs.image.load('graphics/wizard/front_an1.png'),
     gamejs.image.load('graphics/wizard/front_an1.png'),
   ]; 
   player_animation[map.MAP_UP] = [
     gamejs.image.load('graphics/wizard/left.png'),
     gamejs.image.load('graphics/wizard/down.png'),
     gamejs.image.load('graphics/wizard/front_an1.png'),
+    gamejs.image.load('graphics/wizard/front_an1.png'),
   ]; 
   player_animation[map.MAP_DOWN] = [
     gamejs.image.load('graphics/wizard/front_an1.png'),
     gamejs.image.load('graphics/wizard/front_an2.png'),
     gamejs.image.load('graphics/wizard/front_an3.png'),
+    gamejs.image.load('graphics/wizard/front_an2.png'),
   ];
 }
 
@@ -189,6 +193,7 @@ Player.prototype.draw = function(display) {
       player_animation[map.MAP_DOWN][0] :
       player_animation[dir][this.frame];
 
+  window.console.log(this.frame);
   var mainSurface = gamejs.display.getSurface();
   mainSurface.blit(frame, this.rect);
 }
